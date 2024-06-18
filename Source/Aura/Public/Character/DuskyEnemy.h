@@ -16,8 +16,15 @@ class AURA_API ADuskyEnemy : public ADuskyCharacterBase, public IEnemyInterface
 	GENERATED_BODY()
 public:
 	ADuskyEnemy();
-	
+
+	// Enemy Interface
 	virtual void HighlightActor() override;
 	virtual void UnHightlightActor() override;
+	// Enemy Interface
+
+protected:
+	virtual void BeginPlay() override;
 	
 };
+
+

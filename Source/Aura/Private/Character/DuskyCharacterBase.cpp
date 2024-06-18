@@ -13,6 +13,11 @@ ADuskyCharacterBase::ADuskyCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+UAbilitySystemComponent* ADuskyCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
 void ADuskyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();

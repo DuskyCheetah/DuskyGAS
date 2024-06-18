@@ -15,5 +15,9 @@ class AURA_API ADuskyCharacter : public ADuskyCharacterBase
 	GENERATED_BODY()
 public:
 	ADuskyCharacter();
-	
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+
+private:
+	void InitAbilityActorInfo();
 };
