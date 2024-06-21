@@ -5,7 +5,9 @@
 
 #include "AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/DuskyPlayerController.h"
 #include "Player/DuskyPlayerState.h"
+#include "UI/HUD/DuskyHUD.h"
 
 ADuskyCharacter::ADuskyCharacter()
 {
@@ -48,4 +50,15 @@ void ADuskyCharacter::InitAbilityActorInfo()
 	DuskyPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(DuskyPlayerState, this);
 	AbilitySystemComponent = DuskyPlayerState->GetAbilitySystemComponent();
 	AttributeSet = DuskyPlayerState->GetAttributeSet();
+
+	// IF the player controller is not null - which is will be in some situations within multiplayer settings
+	if (ADuskyPlayerController* DuskyPlayerController = Cast<ADuskyPlayerController>(GetController()))
+	{
+		// IF the DuskyHUD widget isn't null - which is will be in some situations within multiplayer settings
+		if (ADuskyHUD* DuskyHUD = Cast<ADuskyHUD>(DuskyPlayerController->GetHUD()))
+		{
+			// Init the overlay with the 4 key variables.
+			DuskyHUD->InitOverlay(DuskyPlayerController, DuskyPlayerState, AbilitySystemComponent, AttributeSet);
+		}
+	}
 }

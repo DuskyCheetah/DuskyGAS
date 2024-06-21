@@ -77,9 +77,12 @@ void ADuskyPlayerController::BeginPlay()
 	check(DuskyContext);
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-	// Add mapping context so PlayerController can retrieve required data.
-	Subsystem->AddMappingContext(DuskyContext, 0);
+	if (Subsystem)
+	{
+		// Add mapping context so PlayerController can retrieve required data.
+		Subsystem->AddMappingContext(DuskyContext, 0);
+	}
+
 
 	// Always show mouse cursor in viewport
 	bShowMouseCursor = true;
