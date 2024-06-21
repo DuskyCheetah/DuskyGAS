@@ -34,6 +34,7 @@ void ADuskyEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 		// THIS IS THE HUGE NO NO. DONT DO THIS
 		UDuskyAttributeSet* MutableDuskyAttributeSet = const_cast<UDuskyAttributeSet*>(DuskyAttributeSet);
 		MutableDuskyAttributeSet->SetHealth(DuskyAttributeSet->GetHealth() + 25.f);
+		MutableDuskyAttributeSet->SetMana(DuskyAttributeSet->GetMana() + 50.f);
 		// THIS IS THE HUGE NO NO. DONT DO THIS
 
 		Destroy();

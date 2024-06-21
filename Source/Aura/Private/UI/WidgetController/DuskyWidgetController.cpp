@@ -11,3 +11,13 @@ void UDuskyWidgetController::SetWidgetControllerParams(const FWidgetControllerPa
 	AbilitySystemComponent = WCParams.AbilitySystemComponent;
 	AttributeSet = WCParams.AttributeSet;
 }
+
+void UDuskyWidgetController::BroadcastInitialValues()
+{
+	
+}
+
+void UDuskyWidgetController::BindCallbacksToDependencies()
+{
+	
+}

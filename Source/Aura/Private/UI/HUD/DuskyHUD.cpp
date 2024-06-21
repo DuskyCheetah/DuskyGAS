@@ -15,6 +15,8 @@ UOverlayWidgetController* ADuskyHUD::GetOverlayWidgetController(const FWidgetCon
 		OverlayWidgetController = NewObject<UOverlayWidgetController>(this, OverlayWidgetControllerClass);
 		// Set parameters with key variables
 		OverlayWidgetController->SetWidgetControllerParams(WCParams);
+		// Bind callbacks for handling attribute changes.
+		OverlayWidgetController->BindCallbacksToDependencies();
 	}
 	// Return either existing controller or newly created
 	return OverlayWidgetController;
@@ -36,6 +38,9 @@ void ADuskyHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySys
 	UOverlayWidgetController* WidgetController = GetOverlayWidgetController(WidgetControllerParams);
 	// Set the Widget Controller
 	OverlayWidget->SetWidgetController(WidgetController);
+	// Broadcast initial attribute values for overlay
+	WidgetController->BroadcastInitialValues();
+	
 	// Add Widget to Viewport
 	Widget->AddToViewport();
 
