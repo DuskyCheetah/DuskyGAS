@@ -3,56 +3,43 @@
 
 #include "Actor/DuskyEffectActor.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "AbilitySystemInterface.h"
-#include "AbilitySystem/DuskyAttributeSet.h"
-#include "Components/SphereComponent.h"
+
 
 ADuskyEffectActor::ADuskyEffectActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-	SetRootComponent(Mesh);
-
-	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
-	Sphere->SetupAttachment(GetRootComponent());
-	
+	SetRootComponent(CreateDefaultSubobject<USceneComponent>("SceneRoot"));
 }
 
-void ADuskyEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	//TODO: Change this to apply a Gameplay Effect. For now, using const_cast as a hack!
-	// Using const_cast is a huge NO NO. 
-	if (IAbilitySystemInterface* ASCInterface = Cast<IAbilitySystemInterface>(OtherActor))
-	{
-		// Should the actor who overlapped, implement an AbilitySystemComponent
-		// Locally store a reference to it's AttributeSet
-		const UDuskyAttributeSet* DuskyAttributeSet = Cast<UDuskyAttributeSet>(ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UDuskyAttributeSet::StaticClass()));
-
-		// THIS IS THE HUGE NO NO. DONT DO THIS
-		UDuskyAttributeSet* MutableDuskyAttributeSet = const_cast<UDuskyAttributeSet*>(DuskyAttributeSet);
-		MutableDuskyAttributeSet->SetHealth(DuskyAttributeSet->GetHealth() + 25.f);
-		MutableDuskyAttributeSet->SetMana(DuskyAttributeSet->GetMana() + 50.f);
-		// THIS IS THE HUGE NO NO. DONT DO THIS
-
-		Destroy();
-	}
-}
-
-void ADuskyEffectActor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	
-}
 
 void ADuskyEffectActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &ADuskyEffectActor::OnOverlap);
-	Sphere->OnComponentEndOverlap.AddDynamic(this, &ADuskyEffectActor::EndOverlap);
+}
+
+void ADuskyEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
+{
+	// Use ASC getter from EPIC ASCBlueprintLibrary Func "GetAbilitySystemComponent"
+	// and store in a ASC Ptr.
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	// Ensure overlapping actor has an ASC
+	if (TargetASC == nullptr) return;
+
+	check(GameplayEffectClass);
+	// Create GameEffectContextHandle - a wrapper for the context to be polymorphic and passed around easily.
+	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
+	// Creates and stores the creator of this effect - so we can keep track of who/what caused this effect.
+	EffectContextHandle.AddSourceObject(this);
+	// Create SpecHandle (Wrapper for EffectSpec) for gameplay effect.
+	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.f, EffectContextHandle);
+	// This needs a Spec - not SpecHandle. Also requires it by const reference - not pointer
+	// We access the data from SpecHandle & call .get() to get the raw pointer
+	// Then dereference the pointer with the prefixed "*"
+	TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
 
 
