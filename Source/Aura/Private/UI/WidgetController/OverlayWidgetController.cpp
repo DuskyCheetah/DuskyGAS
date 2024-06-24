@@ -34,13 +34,17 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
 
 	Cast<UDuskyAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
-		[](const FGameplayTagContainer& AssetTags /*InputParameter*/)
+		[this](const FGameplayTagContainer& AssetTags /*InputParameter*/)
 		{
 			for (const FGameplayTag& Tag : AssetTags)
 			{
-				// TODO: Broadcast the tag to the Widget Controller
-				const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, Msg);
+				FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag(FName("Message"));
+				if (Tag.MatchesTag(MessageTag))
+				{
+					const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+					// Broadcast the row obtained above
+					MessageWidgetRowDelegate.Broadcast(*Row);
+				}
 			}
 		}
 	);
