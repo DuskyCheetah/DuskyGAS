@@ -3,6 +3,7 @@
 
 #include "UI/WidgetController/OverlayWidgetController.h"
 
+#include "AbilitySystem/DuskyAbilitySystemComponent.h"
 #include "AbilitySystem/DuskyAttributeSet.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
@@ -31,6 +32,18 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetManaAttribute()).AddUObject(this, &UOverlayWidgetController::ManaChanged);
 	// Anytime MaxMana changes - MaxManaChanged function will be called
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
+
+	Cast<UDuskyAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+		[](const FGameplayTagContainer& AssetTags /*InputParameter*/)
+		{
+			for (const FGameplayTag& Tag : AssetTags)
+			{
+				// TODO: Broadcast the tag to the Widget Controller
+				const FString Msg = FString::Printf(TEXT("GE Tag: %s"), *Tag.ToString());
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, Msg);
+			}
+		}
+	);
 }
 
 void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const

@@ -36,7 +36,13 @@ void ADuskyEnemy::UnHightlightActor()
 void ADuskyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	InitAbilityActorInfo();
 
+}
+
+void ADuskyEnemy::InitAbilityActorInfo()
+{
 	check(AbilitySystemComponent);
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UDuskyAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }

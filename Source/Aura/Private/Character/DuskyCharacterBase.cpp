@@ -24,3 +24,7 @@ void ADuskyCharacterBase::BeginPlay()
 	
 }
 
+void ADuskyCharacterBase::InitAbilityActorInfo()
+{
+}
+

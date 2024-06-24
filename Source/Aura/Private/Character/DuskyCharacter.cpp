@@ -4,6 +4,7 @@
 #include "Character/DuskyCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/DuskyAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/DuskyPlayerController.h"
 #include "Player/DuskyPlayerState.h"
@@ -48,6 +49,7 @@ void ADuskyCharacter::InitAbilityActorInfo()
 	ADuskyPlayerState* DuskyPlayerState = GetPlayerState<ADuskyPlayerState>();
 	check(DuskyPlayerState);
 	DuskyPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(DuskyPlayerState, this);
+	Cast<UDuskyAbilitySystemComponent>(DuskyPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 	AbilitySystemComponent = DuskyPlayerState->GetAbilitySystemComponent();
 	AttributeSet = DuskyPlayerState->GetAttributeSet();
 
