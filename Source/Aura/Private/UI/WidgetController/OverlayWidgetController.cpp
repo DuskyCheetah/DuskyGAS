@@ -25,13 +25,33 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	const UDuskyAttributeSet* DuskyAttributeSet = CastChecked<UDuskyAttributeSet>(AttributeSet);
 
 	// Anytime Health changes - HealthChanged function will be called
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::HealthChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetHealthAttribute()).AddLambda(
+		[this](const  FOnAttributeChangeData& Data)
+		{
+			OnHealthChanged.Broadcast(Data.NewValue);
+		}
+	);
 	// Anytime MaxHealth changes - MaxHealthChanged function will be called
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetMaxHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxHealthChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetMaxHealthAttribute()).AddLambda(
+		[this](const  FOnAttributeChangeData& Data)
+		{
+			OnMaxHealthChanged.Broadcast(Data.NewValue);
+		}
+	);
 	// Anytime Mana changes - ManaChanged function will be called
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetManaAttribute()).AddUObject(this, &UOverlayWidgetController::ManaChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetManaAttribute()).AddLambda(
+		[this](const  FOnAttributeChangeData& Data)
+		{
+			OnManaChanged.Broadcast(Data.NewValue);
+		}
+	);
 	// Anytime MaxMana changes - MaxManaChanged function will be called
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAttributeSet->GetMaxManaAttribute()).AddLambda(
+		[this](const  FOnAttributeChangeData& Data)
+		{
+			OnMaxManaChanged.Broadcast(Data.NewValue);
+		}
+	);
 
 	Cast<UDuskyAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags /*InputParameter*/)
@@ -48,24 +68,4 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			}
 		}
 	);
-}
-
-void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
-{
-	OnHealthChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxHealthChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
-{
-	OnManaChanged.Broadcast(Data.NewValue);
-}
-
-void UOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxManaChanged.Broadcast(Data.NewValue);
 }
