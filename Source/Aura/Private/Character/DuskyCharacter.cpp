@@ -53,7 +53,7 @@ void ADuskyCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = DuskyPlayerState->GetAbilitySystemComponent();
 	AttributeSet = DuskyPlayerState->GetAttributeSet();
 
-	// IF the player controller is not null - which is will be in some situations within multiplayer settings
+	// IF the player controller is not null - which it will be in some situations within multiplayer settings
 	if (ADuskyPlayerController* DuskyPlayerController = Cast<ADuskyPlayerController>(GetController()))
 	{
 		// IF the DuskyHUD widget isn't null - which is will be in some situations within multiplayer settings
@@ -63,4 +63,5 @@ void ADuskyCharacter::InitAbilityActorInfo()
 			DuskyHUD->InitOverlay(DuskyPlayerController, DuskyPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
+	InitializeDefaultAttributes();
 }

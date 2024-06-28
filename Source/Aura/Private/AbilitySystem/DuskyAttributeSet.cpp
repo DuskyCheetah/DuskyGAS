@@ -11,9 +11,8 @@
 UDuskyAttributeSet::UDuskyAttributeSet()
 {
 	InitHealth(50.f);
-	InitMaxHealth(100.f);
 	InitMana(100.f);
-	InitMaxMana(200.f);
+
 }
 
 void UDuskyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -22,12 +21,53 @@ void UDuskyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 
 	// Register every replicated attribute
 
+	// Begin Core Attribute Register
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Strength, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Vitality, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Dexterity, COND_None, REPNOTIFY_Always);
+	// End Core Attribute Register
+	
 	// Begin Vital Attribute Register
 	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 	// End Vital Attribute Register
+
+	// Begin Defensive Attribute Register
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Armor, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, BlockChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, DodgeChance, COND_None, REPNOTIFY_Always);
+	// End Defensive Attribute Register
+
+	// Begin Recovery Attribute Register
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, HealthRegen, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, ManaRegen, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Leech, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, LifeOnHit, COND_None, REPNOTIFY_Always);
+	// End Recovery Attribute Register
+
+	// Begin Offensive Attribute Register
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, CriticalHitChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, CriticalHitDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, ActionSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, AttackPower, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, SpellPower, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Area, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Multicast, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, Range, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, ExtraProj, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, ArmorPen, COND_None, REPNOTIFY_Always);
+	// End Offensive Attribute Register
+
+	// Begin Utility Attribute Register
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, MovementSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, CooldownReduction, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, PickupRadius, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, GoldFind, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, DashCount, COND_None, REPNOTIFY_Always);
+	// End Utility Attribute Register
 }
 
 // Epic recommends to stick with just clamping attribute in this method. Do not fire off events.
@@ -95,18 +135,38 @@ void UDuskyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallb
 	FEffectProperties Props;
 	SetEffectProperties(Data, Props);
 
+	// Proper Clamping of the Health attribute via SETTING the attribute
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
 	}
-
+	// Proper Clamping of the Mana attribute via SETTING the attribute
 	if (Data.EvaluatedData.Attribute == GetManaAttribute())
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
 }
 
-// Begin Vital Attribute Definitions
+// Begin Core OnRep Definitions
+void UDuskyAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, Health, OldStrength);
+}
+void UDuskyAttributeSet::OnRep_Vitality(const FGameplayAttributeData& OldVitality) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, Health, OldVitality);
+}
+void UDuskyAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, Health, OldIntelligence);
+}
+void UDuskyAttributeSet::OnRep_Dexterity(const FGameplayAttributeData& OldDexterity) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, Health, OldDexterity);
+}
+// End Core OnRep Definitions
+
+// Begin Vital OnRep Definitions
 void UDuskyAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, Health, OldHealth);
@@ -123,7 +183,108 @@ void UDuskyAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldMaxMana);
 }
+// End Vital OnRep Definitions
+
+// Begin Defensive OnRep Definitions
+void UDuskyAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldArmor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldArmor);
+}
+void UDuskyAttributeSet::OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldBlockChance);
+}
+void UDuskyAttributeSet::OnRep_DodgeChance(const FGameplayAttributeData& OldDodgeChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldDodgeChance);
+}
+// End Defensive OnRep Definitions
+
+// Begin Recovery OnRep Definitions
+void UDuskyAttributeSet::OnRep_HealthRegen(const FGameplayAttributeData& OldHealthRegen) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldHealthRegen);
+}
+void UDuskyAttributeSet::OnRep_ManaRegen(const FGameplayAttributeData& OldManaRegen) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldManaRegen);
+}
+void UDuskyAttributeSet::OnRep_Leech(const FGameplayAttributeData& OldLeech) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldLeech);
+}
+void UDuskyAttributeSet::OnRep_LifeOnHit(const FGameplayAttributeData& OldLifeOnHit) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldLifeOnHit);
+}
+// End Recovery OnRep Definitions
+
+// Begin Offensive OnRep Definitions
+void UDuskyAttributeSet::OnRep_CriticalHitChance(const FGameplayAttributeData& OldCriticalHitChance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldCriticalHitChance);
+}
+void UDuskyAttributeSet::OnRep_CriticalHitDamage(const FGameplayAttributeData& OldCriticalHitDamage) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldCriticalHitDamage);
+}
+void UDuskyAttributeSet::OnRep_ActionSpeed(const FGameplayAttributeData& OldActionSpeed) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldActionSpeed);
+}
+void UDuskyAttributeSet::OnRep_AttackPower(const FGameplayAttributeData& OldAttackPower) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldAttackPower);
+}
+void UDuskyAttributeSet::OnRep_SpellPower(const FGameplayAttributeData& OldSpellPower) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldSpellPower);
+}
+void UDuskyAttributeSet::OnRep_Area(const FGameplayAttributeData& OldArea) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldArea);
+}
+void UDuskyAttributeSet::OnRep_Multicast(const FGameplayAttributeData& OldMulticast) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldMulticast);
+}
+void UDuskyAttributeSet::OnRep_Range(const FGameplayAttributeData& OldRange) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldRange);
+}
+void UDuskyAttributeSet::OnRep_ExtraProj(const FGameplayAttributeData& OldExtraProj) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldExtraProj);
+}
+void UDuskyAttributeSet::OnRep_ArmorPen(const FGameplayAttributeData& OldArmorPen) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldArmorPen);
+}
+// End Offensive OnRep Definitions
+
+// Begin Utility OnRep Definitions
+void UDuskyAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldMovementSpeed) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldMovementSpeed);
+}
+void UDuskyAttributeSet::OnRep_CooldownReduction(const FGameplayAttributeData& OldCooldownReduction) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldCooldownReduction);
+}
+void UDuskyAttributeSet::OnRep_PickupRadius(const FGameplayAttributeData& OldPickupRadius) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldPickupRadius);
+}
+void UDuskyAttributeSet::OnRep_GoldFind(const FGameplayAttributeData& OldGoldFind) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldGoldFind);
+}
+void UDuskyAttributeSet::OnRep_DashCount(const FGameplayAttributeData& OldDashCount) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldDashCount);
+}
+// End Utility OnRep Definitions
 
 
 
-// End Vital Attribute Definitions
+

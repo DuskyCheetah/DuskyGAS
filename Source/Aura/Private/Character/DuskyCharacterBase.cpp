@@ -3,6 +3,8 @@
 
 #include "Character/DuskyCharacterBase.h"
 
+#include "AbilitySystemComponent.h"
+
 
 ADuskyCharacterBase::ADuskyCharacterBase()
 {
@@ -27,4 +29,21 @@ void ADuskyCharacterBase::BeginPlay()
 void ADuskyCharacterBase::InitAbilityActorInfo()
 {
 }
+
+void ADuskyCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float level) const
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(GameplayEffectClass);
+	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, level, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
+}
+
+void ADuskyCharacterBase::InitializeDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultCoreAttributes, 1.f);
+	ApplyEffectToSelf(DefaultDerivedAttributes, 1.f);
+}
+
+
 
