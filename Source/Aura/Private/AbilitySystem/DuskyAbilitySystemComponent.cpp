@@ -2,11 +2,13 @@
 
 
 #include "AbilitySystem/DuskyAbilitySystemComponent.h"
+#include "DuskyGameplayTags.h"
 
 void UDuskyAbilitySystemComponent::AbilityActorInfoSet()
 {
 	// Binding to EffectApplied function
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UDuskyAbilitySystemComponent::EffectApplied);
+	
 }
 
 void UDuskyAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySystemComponent,
