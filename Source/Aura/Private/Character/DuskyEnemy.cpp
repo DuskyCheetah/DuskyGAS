@@ -33,6 +33,11 @@ void ADuskyEnemy::UnHightlightActor()
 	Weapon->SetRenderCustomDepth(false);
 }
 
+int32 ADuskyEnemy::GetPlayerLevel()
+{
+	return Level;
+}
+
 void ADuskyEnemy::BeginPlay()
 {
 	Super::BeginPlay();

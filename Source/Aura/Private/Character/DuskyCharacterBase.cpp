@@ -34,7 +34,8 @@ void ADuskyCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gamepla
 {
 	check(IsValid(GetAbilitySystemComponent()));
 	check(GameplayEffectClass);
-	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	ContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(GameplayEffectClass, level, ContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 }
@@ -43,6 +44,7 @@ void ADuskyCharacterBase::InitializeDefaultAttributes() const
 {
 	ApplyEffectToSelf(DefaultCoreAttributes, 1.f);
 	ApplyEffectToSelf(DefaultDerivedAttributes, 1.f);
+	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
 
 

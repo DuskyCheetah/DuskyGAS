@@ -44,6 +44,13 @@ void ADuskyCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+int32 ADuskyCharacter::GetPlayerLevel()
+{
+	const ADuskyPlayerState* DuskyPlayerState = GetPlayerState<ADuskyPlayerState>();
+	check(DuskyPlayerState);
+	return DuskyPlayerState->GetPlayerLevel();
+}
+
 void ADuskyCharacter::InitAbilityActorInfo()
 {
 	ADuskyPlayerState* DuskyPlayerState = GetPlayerState<ADuskyPlayerState>();

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
 #include "GameFramework/Character.h"
+#include "Interaction/CombatInterface.h"
 #include "DuskyCharacterBase.generated.h"
 
 class UGameplayEffect;
@@ -13,7 +14,7 @@ class UAttributeSet;
 
 // Prevents class from being added to any level
 UCLASS(Abstract)
-class AURA_API ADuskyCharacterBase : public ACharacter, public IAbilitySystemInterface
+class AURA_API ADuskyCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -43,6 +44,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultDerivedAttributes;
+
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
+	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float level) const;
 	void InitializeDefaultAttributes() const;
