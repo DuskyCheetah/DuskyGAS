@@ -4,6 +4,7 @@
 #include "UI/HUD/DuskyHUD.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/Widget/DuskyUserWidget.h"
+#include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 
 UOverlayWidgetController* ADuskyHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
@@ -20,6 +21,20 @@ UOverlayWidgetController* ADuskyHUD::GetOverlayWidgetController(const FWidgetCon
 	}
 	// Return either existing controller or newly created
 	return OverlayWidgetController;
+}
+
+UAttributeMenuWidgetController* ADuskyHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	if (AttributeMenuWidgetController == nullptr)
+	{
+		// Create AttyWidgetController
+		AttributeMenuWidgetController = NewObject<UAttributeMenuWidgetController>(this, AttributeMenuWidgetControllerClass);
+		// Set params
+		AttributeMenuWidgetController->SetWidgetControllerParams(WCParams);
+		// Bind Callbacks for handling attribute changes
+		AttributeMenuWidgetController->BindCallbacksToDependencies();
+	}
+	return AttributeMenuWidgetController;
 }
 
 void ADuskyHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
