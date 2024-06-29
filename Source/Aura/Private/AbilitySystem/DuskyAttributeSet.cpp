@@ -7,11 +7,59 @@
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
+#include "DuskyGameplayTags.h"
 
 UDuskyAttributeSet::UDuskyAttributeSet()
 {
-	InitHealth(50.f);
-	InitMana(100.f);
+	const FDuskyGameplayTags& GameplayTags = FDuskyGameplayTags::Get();
+
+	// Begin Add Core Stats to Map
+	TagsToAttributes.Add(GameplayTags.Attributes_Core_Strength, GetStrengthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Core_Vitality, GetVitalityAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Core_Intelligence, GetIntelligenceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Core_Dexterity, GetDexterityAttribute);
+	// End Add Core Stats to Map
+
+	// Begin Add Vital Stats to Map
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_Health, GetHealthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_MaxHealth, GetMaxHealthAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_Mana, GetManaAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Vital_MaxMana, GetMaxManaAttribute);
+	// End Add Vital Stats to Map
+
+	// Begin Add Defensive Stats to Map
+	TagsToAttributes.Add(GameplayTags.Attributes_Defensive_Armor, GetArmorAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Defensive_BlockChance, GetBlockChanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Defensive_DodgeChance, GetDodgeChanceAttribute);
+	// End Add Defensive Stats to Map
+
+	// Begin Add Recovery Stats to Map
+	TagsToAttributes.Add(GameplayTags.Attributes_Recovery_HealthRegen, GetHealthRegenAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Recovery_ManaRegen, GetManaRegenAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Recovery_Leech, GetLeechAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Recovery_LifeOnHit, GetLifeOnHitAttribute);
+	// End Add Recovery Stats to Map
+
+	// Begin Add Offensive Stats to Map
+	TagsToAttributes.Add(GameplayTags.Attributes_Offensive_CriticalHitChance, GetCriticalHitChanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Offensive_CriticalHitDamage, GetCriticalHitDamageAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Offensive_ActionSpeed, GetActionSpeedAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Offensive_AttackPower, GetAttackPowerAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Offensive_SpellPower, GetSpellPowerAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Offensive_Area, GetAreaAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Offensive_Range, GetRangeAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Offensive_Multicast, GetMulticastAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Offensive_ExtraProj, GetExtraProjAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Offensive_ArmorPen, GetArmorPenAttribute);
+	// End Add Offensive Stats to Map
+
+	// Begin Add Utility Stats to Map
+	TagsToAttributes.Add(GameplayTags.Attributes_Utility_MovementSpeed, GetMovementSpeedAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Utility_CooldownReduction, GetCooldownReductionAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Utility_PickupRadius, GetPickupRadiusAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Utility_GoldFind, GetGoldFindAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Utility_DashCount, GetDashCountAttribute);
+	// End Add Utility Stats to Map
 
 }
 

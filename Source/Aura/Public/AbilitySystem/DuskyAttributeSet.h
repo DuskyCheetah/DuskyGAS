@@ -61,6 +61,11 @@ public:
 
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
+	// Don't fucking ask me this shit is so deep, I'm drowning in my own asshole.
+	// but it is very nice.
+	TMap<FGameplayTag, FGameplayAttribute(*)()> TagsToAttributes;
+	
+	
 	/*
 	 *	ATTRIBUTE DECLARATIONS
 	 */
