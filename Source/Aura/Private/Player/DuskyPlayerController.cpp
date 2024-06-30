@@ -2,13 +2,23 @@
 
 
 #include "Player/DuskyPlayerController.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "DuskyGameplayTags.h"
 #include "EnhancedInputSubsystems.h"
+#include "NavigationPath.h"
+#include "NavigationSystem.h"
+#include "AbilitySystem/DuskyAbilitySystemComponent.h"
+#include "Components/SplineComponent.h"
 #include "Input/DuskyInputComponent.h"
 #include "Interaction/EnemyInterface.h"
 
 ADuskyPlayerController::ADuskyPlayerController()
 {
 	bReplicates = true;
+
+	// Construct Spline Object
+	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
 }
 
 void ADuskyPlayerController::PlayerTick(float DeltaTime)
@@ -16,11 +26,36 @@ void ADuskyPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 
 	CursorTrace();
+
+	AutoRun();
 }
+
+void ADuskyPlayerController::AutoRun()
+{
+	if (!bAutoRunning) return;
+	if (APawn* ControlledPawn = GetPawn())
+	{
+		// Location on Spline that's closest to the ControlledPawn
+		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		// Find direction of movement needed
+		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+		// Set that movement in motion, baby!
+		ControlledPawn->AddMovementInput(Direction);
+
+		// Calculate Distance of the movement
+		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
+		// If Distance is less than the acceptance radius of movements
+		if (DistanceToDestination <= AutoRunAcceptanceRadius)
+		{
+			// Stop auto-running
+			bAutoRunning = false;
+		}
+	}
+}
+
 
 void ADuskyPlayerController::CursorTrace()
 {
-	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (!CursorHit.bBlockingHit) return;
 
@@ -70,17 +105,112 @@ void ADuskyPlayerController::CursorTrace()
 
 void ADuskyPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
+	if (InputTag.MatchesTagExact(FDuskyGameplayTags::Get().InputTag_LMB))
+	{
+		// If ThisActor == true, we are hovering over enemy target - bTargeting = true
+		// Else - bTargeting = false (No Target)
+		bTargeting = ThisActor ? true : false;
+		bAutoRunning = false;
+	}
+
 }
 
 void ADuskyPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Yellow, *InputTag.ToString());
+	// If input held IS NOT LMB - Do yo thang, fire that bitch.
+	if (!InputTag.MatchesTagExact(FDuskyGameplayTags::Get().InputTag_LMB))
+	{
+		if (GetASC())
+		{
+			GetASC()->AbilityInputTagReleased(InputTag);
+		}
+		return;
+	}
+
+	// if input IS LMB and we ARE Targeting - Do yo thang, fire that bitch.
+	if (bTargeting)
+	{
+		if (GetASC())
+		{
+			GetASC()->AbilityInputTagReleased(InputTag);
+		}	
+	}
+	else
+	{
+		APawn* ControlledPawn = GetPawn();
+		// Input IS LMB - We are NOT Targeting
+		// Character movement functionality.
+		if (FollowTime <= ShortPressThreshold&& ControlledPawn)	// If input key was pressed longer than our custom set threshold or not
+		{
+			// Find path between characters current location & the determined move-to location
+			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
+			{
+				// Clear any previous Spline Points
+				Spline->ClearSplinePoints();
+				// Iterate through the NavPath
+				for (const FVector& PointLoc : NavPath->PathPoints)
+				{
+					// Add the next Spline Point to the Movement Spline
+					Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
+					DrawDebugSphere(GetWorld(), PointLoc, 12.f, 8, FColor::Green, false, 5.f);
+				}
+				CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
+				bAutoRunning = true;
+			}
+		}
+		// Resetting FollowTime && bTargeting for this input release cycle.
+		FollowTime = 0.f;
+		bTargeting = false;
+	}
 }
 
 void ADuskyPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Blue, *InputTag.ToString());
+	// If input held IS NOT LMB - Do yo thang.
+	if (!InputTag.MatchesTagExact(FDuskyGameplayTags::Get().InputTag_LMB))
+	{
+		if (GetASC())
+		{
+			GetASC()->AbilityInputTagHeld(InputTag);
+		}
+		return;
+	}
+
+	// if input IS LMB and we ARE Targeting - Do yo thang, fire that bitch.
+	if (bTargeting)
+	{
+		if (GetASC())
+		{
+			GetASC()->AbilityInputTagHeld(InputTag);
+		}	
+	}
+	else
+	{
+		// Counting amount of time input has been held
+		FollowTime += GetWorld()->GetDeltaSeconds();
+		
+		if (CursorHit.bBlockingHit)
+		{
+			CachedDestination = CursorHit.ImpactPoint;
+		}
+
+		if (APawn* ControlledPawn = GetPawn())
+		{
+			const FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
+			ControlledPawn->AddMovementInput(WorldDirection);
+		}
+	}
+}
+
+UDuskyAbilitySystemComponent* ADuskyPlayerController::GetASC()
+{
+	// If we haven't yet obtained the ASC 
+	if (DuskyAbilitySystemComponent == nullptr)
+	{
+		// Do so now...
+		DuskyAbilitySystemComponent = Cast<UDuskyAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn<APawn>()));
+	}
+	return DuskyAbilitySystemComponent;
 }
 
 
