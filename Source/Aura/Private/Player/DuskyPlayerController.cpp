@@ -3,7 +3,7 @@
 
 #include "Player/DuskyPlayerController.h"
 #include "EnhancedInputSubsystems.h"
-#include "EnhancedInputComponent.h"
+#include "Input/DuskyInputComponent.h"
 #include "Interaction/EnemyInterface.h"
 
 ADuskyPlayerController::ADuskyPlayerController()
@@ -68,6 +68,21 @@ void ADuskyPlayerController::CursorTrace()
 	}
 }
 
+void ADuskyPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(1, 3.f, FColor::Red, *InputTag.ToString());
+}
+
+void ADuskyPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(2, 3.f, FColor::Yellow, *InputTag.ToString());
+}
+
+void ADuskyPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(3, 3.f, FColor::Blue, *InputTag.ToString());
+}
+
 
 void ADuskyPlayerController::BeginPlay()
 {
@@ -101,10 +116,13 @@ void ADuskyPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
+	// Obtain DuskyInputComponent
+	UDuskyInputComponent* DuskyInputComponent = CastChecked<UDuskyInputComponent>(InputComponent);
 
 	// Bind the Move function to the Move Input Action
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADuskyPlayerController::Move);
+	DuskyInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADuskyPlayerController::Move);
+	// Bind Input Functions to Input Actions
+	DuskyInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
 
 void ADuskyPlayerController::Move(const FInputActionValue& InputActionValue)

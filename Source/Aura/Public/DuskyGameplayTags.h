@@ -17,6 +17,10 @@ public:
 	static const FDuskyGameplayTags& Get() { return GameplayTags; }
 	static void InitializeNativeGameplayTags();
 
+	/*
+	 *		ATTRIBUTE TAGS
+	 */ 
+	
 	// Begin Core Tags
 	FGameplayTag Attributes_Core_Strength;
 	FGameplayTag Attributes_Core_Vitality;
@@ -64,7 +68,19 @@ public:
 	FGameplayTag Attributes_Utility_GoldFind;
 	FGameplayTag Attributes_Utility_DashCount;
 	// End Utility Tags
-protected:
+
+	/*
+	 *		INPUT TAGS
+	 */ 
+	
+	// Begin Input Tags
+	FGameplayTag InputTag_LMB;
+	FGameplayTag InputTag_RMB;
+	FGameplayTag InputTag_1;
+	FGameplayTag InputTag_2;
+	FGameplayTag InputTag_3;
+	FGameplayTag InputTag_4;
+	// End Input Tags
 
 private:
 	static FDuskyGameplayTags GameplayTags;

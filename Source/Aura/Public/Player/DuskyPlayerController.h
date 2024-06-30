@@ -4,12 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GameplayTagContainer.h"
 #include "DuskyPlayerController.generated.h"
 
+struct FGameplayTag;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 class IEnemyInterface;
+class UDuskyInputConfig;
 
 /**
  * 
@@ -27,9 +30,11 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
+	// Project-wide Context file.
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> DuskyContext;
-	
+
+	// Character Movement Action
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 
@@ -41,5 +46,12 @@ private:
 	// DO not use raw pointers.
 	TScriptInterface<IEnemyInterface> LastActor;
 	TScriptInterface<IEnemyInterface> ThisActor;
+
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	TObjectPtr<UDuskyInputConfig> InputConfig;
 	
 };

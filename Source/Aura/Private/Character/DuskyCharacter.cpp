@@ -33,6 +33,8 @@ void ADuskyCharacter::PossessedBy(AController* NewController)
 
 	// Init ability actor info for the server.
 	InitAbilityActorInfo();
+	// Granting applicable abilities to character.
+	AddCharacterAbilities();
 	
 }
 

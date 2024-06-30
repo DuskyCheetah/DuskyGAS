@@ -9,6 +9,10 @@ FDuskyGameplayTags FDuskyGameplayTags::GameplayTags;
 
 void FDuskyGameplayTags::InitializeNativeGameplayTags()
 {
+	/*
+	 *		ATTRIBUTE TAG REGISTER
+	 */ 
+	
 	// Begin Core Native Tag Register
 	GameplayTags.Attributes_Core_Strength = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Core.Strength"));
 	GameplayTags.Attributes_Core_Vitality = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Core.Vitality"));
@@ -56,6 +60,19 @@ void FDuskyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Attributes_Utility_GoldFind = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Utility.GoldFind"));
 	GameplayTags.Attributes_Utility_DashCount = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Utility.DashCount"));
 	// End Utility Native Tag Register
+
+	/*
+	 *		INPUT TAG REGISTER
+	 */ 
+	
+	// Begin Input Native Tag Register
+	GameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.LMB"), FString("Input Tag for Left Mouse Button"));
+	GameplayTags.InputTag_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.RMB"), FString("Input Tag for Right Mouse Button"));
+	GameplayTags.InputTag_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.1"), FString("Input Tag for Key 1"));
+	GameplayTags.InputTag_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.2"), FString("Input Tag for Key 2"));
+	GameplayTags.InputTag_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.3"), FString("Input Tag for Key 3"));
+	GameplayTags.InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.4"), FString("Input Tag for Key 4"));
+	// End Input Native Tag Register
 	
 	
 }

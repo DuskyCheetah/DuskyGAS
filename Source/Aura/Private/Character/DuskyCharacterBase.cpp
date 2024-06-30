@@ -4,6 +4,7 @@
 #include "Character/DuskyCharacterBase.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/DuskyAbilitySystemComponent.h"
 
 
 ADuskyCharacterBase::ADuskyCharacterBase()
@@ -45,6 +46,15 @@ void ADuskyCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultCoreAttributes, 1.f);
 	ApplyEffectToSelf(DefaultDerivedAttributes, 1.f);
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+}
+
+void ADuskyCharacterBase::AddCharacterAbilities()
+{
+	// Obtain Characters ASC
+	UDuskyAbilitySystemComponent* DuskyASC = CastChecked<UDuskyAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority()) return;
+
+	DuskyASC->AddCharacterAbilities(StartupAbilities);
 }
 
 
