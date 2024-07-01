@@ -6,6 +6,7 @@
 #include "AbilitySystem/Abilities/DuskyGameplayAbility.h"
 #include "DuskyProjectileAbilityBase.generated.h"
 
+class ADuskyProjectile;
 /**
  * 
  */
@@ -16,5 +17,10 @@ class AURA_API UDuskyProjectileAbilityBase : public UDuskyGameplayAbility
 public:
 
 protected:
+	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+
+	// Member to Create ProjectileClass to spawn.
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<ADuskyProjectile> ProjectileClass;
 };

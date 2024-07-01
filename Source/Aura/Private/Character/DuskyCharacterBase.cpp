@@ -27,6 +27,11 @@ void ADuskyCharacterBase::BeginPlay()
 	
 }
 
+FVector ADuskyCharacterBase::GetCombatSocketLocation()
+{
+	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
 void ADuskyCharacterBase::InitAbilityActorInfo()
 {
 }
