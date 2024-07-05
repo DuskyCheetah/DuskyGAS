@@ -5,11 +5,16 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/DuskyAbilitySystemComponent.h"
+#include "Components/CapsuleComponent.h"
 
 
 ADuskyCharacterBase::ADuskyCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	// Set collision to ignore camera for both the capsule and mesh of characters
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));

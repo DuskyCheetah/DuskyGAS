@@ -13,8 +13,16 @@ void UDuskyProjectileAbilityBase::ActivateAbility(const FGameplayAbilitySpecHand
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
+	
+	
+
+	
+}
+
+void UDuskyProjectileAbilityBase::SpawnProjectile(const FVector& ProjectileTargetLocation)
+{
 	// Boolean tracking if we are "on" the server
-	const bool bIsServer = HasAuthority(&ActivationInfo);
+	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
 	ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
@@ -22,11 +30,15 @@ void UDuskyProjectileAbilityBase::ActivateAbility(const FGameplayAbilitySpecHand
 	{
 		// We are on server...
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
+		// Vector from SocketLocation (SOURCE) to ProjectileTargetLocation (TARGET)
+		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		// Set pitch = 0 so projectiles fly parallel to the ground.
+		Rotation.Pitch = 0.f;
 
 		// Create Local SpawnTransform & set = to Weapon/Body Spawn Location Socket
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
-		// TODO: Set the projectile rotation
+		SpawnTransform.SetRotation(Rotation.Quaternion());
 		
 		// Spawn the projectile with it's many many inputs.
 		ADuskyProjectile* Projectile = GetWorld()->SpawnActorDeferred<ADuskyProjectile>(
@@ -40,7 +52,4 @@ void UDuskyProjectileAbilityBase::ActivateAbility(const FGameplayAbilitySpecHand
 		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
-	
-
-	
 }

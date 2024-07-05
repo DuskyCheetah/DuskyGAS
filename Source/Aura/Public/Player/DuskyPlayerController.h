@@ -40,6 +40,13 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
 
+	// Shift Input Action
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ShiftAction;
+	void ShiftPressed() { bShiftKeyDown = true;}
+	void ShiftReleased() { bShiftKeyDown = false;}
+	bool bShiftKeyDown = false;
+	
 	void Move(const FInputActionValue& InputActionValue);
 
 	void CursorTrace();

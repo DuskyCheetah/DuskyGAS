@@ -117,25 +117,20 @@ void ADuskyPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void ADuskyPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	// If input held IS NOT LMB - Do yo thang, fire that bitch.
+	
 	if (!InputTag.MatchesTagExact(FDuskyGameplayTags::Get().InputTag_LMB))
 	{
 		if (GetASC())
 		{
 			GetASC()->AbilityInputTagReleased(InputTag);
+			return;
 		}
-		return;
+		
 	}
-
-	// if input IS LMB and we ARE Targeting - Do yo thang, fire that bitch.
-	if (bTargeting)
-	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);
-		}	
-	}
-	else
+	
+	if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
+	
+	if (!bTargeting && !bShiftKeyDown)
 	{
 		APawn* ControlledPawn = GetPawn();
 		// Input IS LMB - We are NOT Targeting
@@ -160,7 +155,7 @@ void ADuskyPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		}
 		// Resetting FollowTime && bTargeting for this input release cycle.
 		FollowTime = 0.f;
-		bTargeting = false;
+		bTargeting = false;	
 	}
 }
 
@@ -177,7 +172,9 @@ void ADuskyPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 	}
 
 	// if input IS LMB and we ARE Targeting - Do yo thang, fire that bitch.
-	if (bTargeting)
+	// OR
+	// if input IS LMB and Shift key is being held - Do yo thang, fire that bitch!
+	if (bTargeting || bShiftKeyDown)
 	{
 		if (GetASC())
 		{
@@ -251,6 +248,11 @@ void ADuskyPlayerController::SetupInputComponent()
 
 	// Bind the Move function to the Move Input Action
 	DuskyInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADuskyPlayerController::Move);
+	
+	// Bind Shift Input Action for isPressed and isReleased logic
+	DuskyInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ADuskyPlayerController::ShiftPressed);
+	DuskyInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ADuskyPlayerController::ShiftReleased);
+	
 	// Bind Input Functions to Input Actions
 	DuskyInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
