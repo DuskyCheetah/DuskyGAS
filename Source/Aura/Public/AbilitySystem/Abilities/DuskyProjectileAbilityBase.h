@@ -7,6 +7,8 @@
 #include "DuskyProjectileAbilityBase.generated.h"
 
 class ADuskyProjectile;
+class UGameplayEffect;
+
 /**
  * 
  */
@@ -26,4 +28,7 @@ protected:
 	// Member to Create ProjectileClass to spawn.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ADuskyProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/Abilities/DuskyProjectileAbilityBase.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Actor/DuskyProjectile.h"
 #include "Interaction/CombatInterface.h"
 
@@ -48,7 +50,18 @@ void UDuskyProjectileAbilityBase::SpawnProjectile(const FVector& ProjectileTarge
 			Cast<APawn>(GetOwningActorFromActorInfo()),			  // Instigator of the GameplayAbility
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);		 // Collision Handling Policy
 
-		// TODO: Give the projectile a GameplayEffectSpec for causing damage.
+
+		/*	DAMAGE HANDLING		*/
+		
+		// Obtain ASC
+		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+		// Create GE SpecHandle for Damage
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+		// Assigned Projectiles SpecHandle to the created SpecHandle with DamageEffectClass GE.
+		Projectile->DamageEffectSpecHandle = SpecHandle;
+		
+		/*	DAMAGE HANDLING		*/
+
 		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
