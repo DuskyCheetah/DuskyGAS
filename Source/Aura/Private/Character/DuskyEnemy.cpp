@@ -5,7 +5,9 @@
 #include "AbilitySystem/DuskyAbilitySystemComponent.h"
 #include "AbilitySystem/DuskyAttributeSet.h"
 #include "Aura/Aura.h"
-#include "UObject/ReferenceChainSearch.h"
+#include "Components/WidgetComponent.h"
+#include "UI/Widget/DuskyUserWidget.h"
+
 
 ADuskyEnemy::ADuskyEnemy()
 {
@@ -16,7 +18,11 @@ ADuskyEnemy::ADuskyEnemy()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
-	AttributeSet = CreateDefaultSubobject<UDuskyAttributeSet>("AttrbuteSet");
+	AttributeSet = CreateDefaultSubobject<UDuskyAttributeSet>("AttrbuteSet");	// TODO: Fix this typo in all locations.
+
+	// Create HealthBar widget & Set attachment to root component.
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar->SetupAttachment(GetRootComponent());
 }
 
 void ADuskyEnemy::HighlightActor()
@@ -43,6 +49,35 @@ void ADuskyEnemy::BeginPlay()
 	Super::BeginPlay();
 	InitAbilityActorInfo();
 
+	// Obtain DuskyUserWidget & Cast to HealthBar
+	if (UDuskyUserWidget* DuskyUserWidget = Cast<UDuskyUserWidget>(HealthBar->GetUserWidgetObject()))
+	{
+		// Set WidgetController to DuskyEnemy.
+		DuskyUserWidget->SetWidgetController(this);
+	}
+	
+	// Obtain DuskyAttributeSet
+	if (const UDuskyAttributeSet* DuskyAS = Cast<UDuskyAttributeSet>(AttributeSet))
+	{
+		// Bind to OnHealthChanged Delegate via Lambda
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAS->GetHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnHealthChanged.Broadcast(Data.NewValue);
+			}
+		);
+		// Bind to OnMaxHealthChanged Delegate via Lambda
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(DuskyAS->GetMaxHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnMaxHealthChanged.Broadcast(Data.NewValue);
+			}
+		);
+		// Broadcast initial values of Health / Max Health
+		OnHealthChanged.Broadcast(DuskyAS->GetHealth());
+		OnMaxHealthChanged.Broadcast(DuskyAS->GetMaxHealth());
+	}
+	
 }
 
 void ADuskyEnemy::InitAbilityActorInfo()
