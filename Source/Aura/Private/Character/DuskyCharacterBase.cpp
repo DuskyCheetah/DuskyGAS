@@ -57,9 +57,7 @@ void ADuskyCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gamepla
 
 void ADuskyCharacterBase::InitializeDefaultAttributes() const
 {
-	ApplyEffectToSelf(DefaultCoreAttributes, 1.f);
-	ApplyEffectToSelf(DefaultDerivedAttributes, 1.f);
-	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+
 }
 
 void ADuskyCharacterBase::AddCharacterAbilities()

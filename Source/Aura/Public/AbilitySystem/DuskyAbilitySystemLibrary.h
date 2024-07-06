@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Data/CharacterClassInfo.h"
 #include "Data/EnemyClassInfo.h"
 #include "DuskyAbilitySystemLibrary.generated.h"
 
@@ -29,6 +30,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "DuskyAbilitySystemLibrary|EnemyClassDefaults")
 	static void InitializeEnemyDefaultAttributes(const UObject* WorldContextObject, EEnemyClass EnemyClass, float Level, UAbilitySystemComponent* ASC);
 
-	// TODO: confirm if we initialize player class attributes here or elsewhere.
-	//		 find out where it's currently initialized at the moment.
+	UFUNCTION(BlueprintCallable, Category = "DuskyAbilitySystemLibrary|CharacterClassDefaults")
+	static void InitializePlayerDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
 };

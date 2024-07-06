@@ -92,5 +92,5 @@ void ADuskyEnemy::InitAbilityActorInfo()
 
 void ADuskyEnemy::InitializeDefaultAttributes() const
 {
-	UDuskyAbilitySystemLibrary::InitializeEnemyDefaultAttributes(this, EnemyClass, Level, AbilitySystemComponent);
+	UDuskyAbilitySystemLibrary::InitializeEnemyDefaultAttributes(GetWorld(), EnemyClass, Level, AbilitySystemComponent);
 }

@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/DuskyAbilitySystemComponent.h"
+#include "AbilitySystem/DuskyAbilitySystemLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/DuskyPlayerController.h"
 #include "Player/DuskyPlayerState.h"
@@ -53,6 +54,16 @@ int32 ADuskyCharacter::GetPlayerLevel()
 	return DuskyPlayerState->GetPlayerLevel();
 }
 
+void ADuskyCharacter::InitializeDefaultAttributes() const
+{
+	// Obtain PlayerState to retrieve Player Level
+	const ADuskyPlayerState* DuskyPlayerState = GetPlayerState<ADuskyPlayerState>();
+	check(DuskyPlayerState);
+	int32 Level = DuskyPlayerState->GetPlayerLevel();
+	
+	UDuskyAbilitySystemLibrary::InitializePlayerDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+}
+
 void ADuskyCharacter::InitAbilityActorInfo()
 {
 	ADuskyPlayerState* DuskyPlayerState = GetPlayerState<ADuskyPlayerState>();
@@ -65,7 +76,7 @@ void ADuskyCharacter::InitAbilityActorInfo()
 	// IF the player controller is not null - which it will be in some situations within multiplayer settings
 	if (ADuskyPlayerController* DuskyPlayerController = Cast<ADuskyPlayerController>(GetController()))
 	{
-		// IF the DuskyHUD widget isn't null - which is will be in some situations within multiplayer settings
+		// IF the DuskyHUD widget isn't null - which it will be in some situations within multiplayer settings
 		if (ADuskyHUD* DuskyHUD = Cast<ADuskyHUD>(DuskyPlayerController->GetHUD()))
 		{
 			// Init the overlay with the 4 key variables.

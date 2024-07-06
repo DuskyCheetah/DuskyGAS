@@ -13,6 +13,7 @@ class UCharacterClassInfo;
  * 
  */
 UCLASS()
+// TODO:: Find a way to fix this typo without breaking the whole fucking thing lul.
 class AURA_API ADuslyGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()

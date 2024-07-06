@@ -72,11 +72,76 @@ void UDuskyAbilitySystemLibrary::InitializeEnemyDefaultAttributes(const UObject*
 	// Obtain ClassInfo for EnemyType
 	FEnemyClassDefaultInfo ClassDefaultInfo = ClassInfo->GetEnemyClassDefaultInfo(EnemyClass);
 
+	/*		Init Core Attributes		*/
+	
 	// Create ContextHandle & Add SourceObject (in case it's needed)
 	FGameplayEffectContextHandle EnemyAttributesContextHandle = ASC->MakeEffectContext();
 	EnemyAttributesContextHandle.AddSourceObject(AvatarActor);
-	
 	// Create GESpecHandle to pass into ApplyGESpecToSelf
 	const FGameplayEffectSpecHandle EnemyAttributesSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.EnemyAttributes, Level, EnemyAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*EnemyAttributesSpecHandle.Data.Get());	// Must dereference the handle & .Data.Get() to retrieve the Spec from Handle
+
+	/*		Init Derived Attributes		*/
+
+	// Create ContextHandle & Add SourceObject (in case it's needed)
+	FGameplayEffectContextHandle DerivedAttributesContextHandle = ASC->MakeEffectContext();
+	DerivedAttributesContextHandle.AddSourceObject(AvatarActor);
+	// Create GESpecHandle to pass into ApplyGESpecToSelf
+	const FGameplayEffectSpecHandle DerivedAttributeSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.DerivedAttributes, Level, DerivedAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*DerivedAttributeSpecHandle.Data.Get());	// Must dereference the handle & .Data.Get() to retrieve the Spec from Handle
+
+	/*		Init Vital Attributes		*/
+
+	// Create ContextHandle & Add SourceObject (in case it's needed)
+	FGameplayEffectContextHandle VitalAttributesContextHandle = ASC->MakeEffectContext();
+	VitalAttributesContextHandle.AddSourceObject(AvatarActor);
+	// Create GESpecHandle to pass into ApplyGESpecToSelf
+	const FGameplayEffectSpecHandle VitalAttributeSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.VitalAttributes, Level, VitalAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributeSpecHandle.Data.Get());	// Must dereference the handle & .Data.Get() to retrieve the Spec from Handle
+}
+
+void UDuskyAbilitySystemLibrary::InitializePlayerDefaultAttributes(const UObject* WorldContextObject,
+	ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
+{
+	// Obtain GameMode - return if null because no crashie.
+	ADuslyGameModeBase* DuskyGameMode = Cast<ADuslyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (DuskyGameMode == nullptr) return;
+
+	// Obtain Source for GE's (if needed)
+	AActor* AvatarActor = ASC->GetAvatarActor();
+
+	// Obtain CharacterClassInfo
+	UCharacterClassInfo* ClassInfo = DuskyGameMode->CharacterClassInfo;
+	// Obtain ClassInfo for CharacterType
+	FCharacterClassDefaultInfo ClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
+
+	/*		Init Core Attributes		*/
+	
+	// Create ContextHandle & Add SourceObject (in case it's needed)
+	FGameplayEffectContextHandle CoreAttributesContextHandle = ASC->MakeEffectContext();
+	CoreAttributesContextHandle.AddSourceObject(AvatarActor);
+
+	// Create GESpecHandle to pass into ApplyGESpecToSelf
+	const FGameplayEffectSpecHandle CoreAttributeSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.CoreAttributes, Level, CoreAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*CoreAttributeSpecHandle.Data.Get());	// Must dereference the handle & .Data.Get() to retrieve the Spec from Handle
+	
+	/*		Init Derived Attributes		*/
+
+	// Create ContextHandle & Add SourceObject (in case it's needed)
+	FGameplayEffectContextHandle DerivedAttributesContextHandle = ASC->MakeEffectContext();
+	DerivedAttributesContextHandle.AddSourceObject(AvatarActor);
+
+	// Create GESpecHandle to pass into ApplyGESpecToSelf
+	const FGameplayEffectSpecHandle DerivedAttributeSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.DerivedAttributes, Level, DerivedAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*DerivedAttributeSpecHandle.Data.Get());	// Must dereference the handle & .Data.Get() to retrieve the Spec from Handle
+
+	/*		Init Vital Attributes		*/
+
+	// Create ContextHandle & Add SourceObject (in case it's needed)
+	FGameplayEffectContextHandle VitalAttributesContextHandle = ASC->MakeEffectContext();
+	VitalAttributesContextHandle.AddSourceObject(AvatarActor);
+
+	// Create GESpecHandle to pass into ApplyGESpecToSelf
+	const FGameplayEffectSpecHandle VitalAttributeSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.VitalAttributes, Level, VitalAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributeSpecHandle.Data.Get());	// Must dereference the handle & .Data.Get() to retrieve the Spec from Handle
 }
