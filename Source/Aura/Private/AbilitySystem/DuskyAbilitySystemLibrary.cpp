@@ -2,6 +2,8 @@
 
 
 #include "AbilitySystem/DuskyAbilitySystemLibrary.h"
+
+#include "Game/DuslyGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/WidgetController/DuskyWidgetController.h"
 #include "Player/DuskyPlayerState.h"
@@ -54,4 +56,27 @@ UAttributeMenuWidgetController* UDuskyAbilitySystemLibrary::GetAttributeMenuWidg
 		}
 	}
 	return nullptr;
+}
+
+void UDuskyAbilitySystemLibrary::InitializeEnemyDefaultAttributes(const UObject* WorldContextObject, EEnemyClass EnemyClass, float Level, UAbilitySystemComponent* ASC)
+{
+	// Obtain GameMode - return if null because no crashie.
+	ADuslyGameModeBase* DuskyGameMode = Cast<ADuslyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (DuskyGameMode == nullptr) return;
+
+	// Obtain Source for GE's (if needed)
+	AActor* AvatarActor = ASC->GetAvatarActor();
+	
+	// Obtain EnemyClassInfo
+	UEnemyClassInfo* ClassInfo = DuskyGameMode->EnemyClassInfo;
+	// Obtain ClassInfo for EnemyType
+	FEnemyClassDefaultInfo ClassDefaultInfo = ClassInfo->GetEnemyClassDefaultInfo(EnemyClass);
+
+	// Create ContextHandle & Add SourceObject (in case it's needed)
+	FGameplayEffectContextHandle EnemyAttributesContextHandle = ASC->MakeEffectContext();
+	EnemyAttributesContextHandle.AddSourceObject(AvatarActor);
+	
+	// Create GESpecHandle to pass into ApplyGESpecToSelf
+	const FGameplayEffectSpecHandle EnemyAttributesSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.EnemyAttributes, Level, EnemyAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*EnemyAttributesSpecHandle.Data.Get());	// Must dereference the handle & .Data.Get() to retrieve the Spec from Handle
 }

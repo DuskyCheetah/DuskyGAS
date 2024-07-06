@@ -36,7 +36,8 @@ UCLASS()
 class AURA_API UEnemyClassInfo : public UDataAsset
 {
 	GENERATED_BODY()
-
+public:
+	
 	// Mapping Character Class to it's DefaultInfo
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TMap<EEnemyClass, FEnemyClassDefaultInfo> EnemyClassInformation;

@@ -3,6 +3,7 @@
 
 #include "Character/DuskyEnemy.h"
 #include "AbilitySystem/DuskyAbilitySystemComponent.h"
+#include "AbilitySystem/DuskyAbilitySystemLibrary.h"
 #include "AbilitySystem/DuskyAttributeSet.h"
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
@@ -87,4 +88,9 @@ void ADuskyEnemy::InitAbilityActorInfo()
 	Cast<UDuskyAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 
 	InitializeDefaultAttributes();
+}
+
+void ADuskyEnemy::InitializeDefaultAttributes() const
+{
+	UDuskyAbilitySystemLibrary::InitializeEnemyDefaultAttributes(this, EnemyClass, Level, AbilitySystemComponent);
 }
