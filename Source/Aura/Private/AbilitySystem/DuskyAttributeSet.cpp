@@ -194,6 +194,19 @@ void UDuskyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallb
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		const float LocalIncomingDamage = GetIncomingDamage();	// Catch the value of Incoming Damage
+		SetIncomingDamage(0.f);	// Reset it to zero
+
+		if (LocalIncomingDamage > 0.f)	// Only need to act if incoming damage was > zero
+		{
+			const float NewHealth = GetHealth() - LocalIncomingDamage;
+			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+
+			const bool bFatal = NewHealth <= 0.f;
+		}
+	}
 }
 
 // Begin Core OnRep Definitions

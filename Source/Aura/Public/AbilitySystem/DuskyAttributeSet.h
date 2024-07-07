@@ -178,7 +178,12 @@ public:
 	ATTRIBUTE_ACCESSORS(UDuskyAttributeSet, DashCount);
 	// End Utility Attributes
 	//***************************************************************
-
+	// Begin Meta Attributes	**Meta Attributes are not Replicated**
+	UPROPERTY(BlueprintReadOnly, Category = "Meta Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UDuskyAttributeSet, IncomingDamage);
+	// End Meta Attributes
+	
 	/*
 	 *	ONREP DECLARATIONS
 	 */

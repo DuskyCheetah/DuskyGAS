@@ -82,6 +82,9 @@ public:
 	FGameplayTag InputTag_4;
 	// End Input Tags
 
+	// Damage Tag
+	FGameplayTag Damage;
+
 private:
 	static FDuskyGameplayTags GameplayTags;
 };

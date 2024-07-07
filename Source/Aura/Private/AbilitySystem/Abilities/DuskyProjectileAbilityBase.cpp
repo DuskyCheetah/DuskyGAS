@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "Actor/DuskyProjectile.h"
 #include "Interaction/CombatInterface.h"
+#include "Aura/Public/DuskyGameplayTags.h"
 
 
 void UDuskyProjectileAbilityBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -63,6 +64,13 @@ void UDuskyProjectileAbilityBase::SpawnProjectile(const FVector& ProjectileTarge
 
 		// Create GE SpecHandle for Damage
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
+
+		// Obtain Native Gameplay Tags
+		FDuskyGameplayTags GameplayTags = FDuskyGameplayTags::Get();
+		// Obtain AbilityLevel for magnitude application.
+		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("Firebolt Damage %f"), ScaledDamage));
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, ScaledDamage);
 		// Assigned Projectiles SpecHandle to the created SpecHandle with DamageEffectClass GE.
 		Projectile->DamageEffectSpecHandle = SpecHandle;
 		
