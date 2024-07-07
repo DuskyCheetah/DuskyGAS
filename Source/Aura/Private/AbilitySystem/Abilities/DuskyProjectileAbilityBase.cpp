@@ -55,8 +55,14 @@ void UDuskyProjectileAbilityBase::SpawnProjectile(const FVector& ProjectileTarge
 		
 		// Obtain ASC
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+		// Create EffectContextHandle to pass into SpecHandle.
+		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
+		// Filling out Data params of the ContextHandle for a learning exercise.
+		EffectContextHandle.SetAbility(this);
+		EffectContextHandle.AddSourceObject(Projectile);
+
 		// Create GE SpecHandle for Damage
-		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
 		// Assigned Projectiles SpecHandle to the created SpecHandle with DamageEffectClass GE.
 		Projectile->DamageEffectSpecHandle = SpecHandle;
 		
