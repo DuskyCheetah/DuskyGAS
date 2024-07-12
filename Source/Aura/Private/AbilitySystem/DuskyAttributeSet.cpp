@@ -9,6 +9,8 @@
 #include "Net/UnrealNetwork.h"
 #include "DuskyGameplayTags.h"
 #include "Interaction/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
+#include "Player/DuskyPlayerController.h"
 
 UDuskyAttributeSet::UDuskyAttributeSet()
 {
@@ -206,7 +208,8 @@ void UDuskyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallb
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 
 			const bool bFatal = NewHealth <= 0.f;
-			if (bFatal)
+			
+			if (bFatal)   // If damage killed target
 			{
 				ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
 				if (CombatInterface)
@@ -215,12 +218,28 @@ void UDuskyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallb
 				}
 				
 			}
-			else
+			else   // Target != dead - hit react activate
 			{
 				FGameplayTagContainer TagContainer;   // Create TagContainer required for ActivateByTag Call
 				TagContainer.AddTag(FDuskyGameplayTags::Get().Effects_HitReact);   // Add HitReact Tag to container
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);   // Pass in said container to try activate
 			}
+
+			ShowFloatingText(Props, LocalIncomingDamage);
+		}
+	}
+}
+
+void UDuskyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Value) const
+{
+	// If damage source is NOT equal to target, as we don't want to show "self-damage"
+	if (Props.SourceCharacter != Props.TargetCharacter)
+	{
+		// Obtain DuskyPlayerController & check validity of pointer
+		if (ADuskyPlayerController* PC = Cast<ADuskyPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		{
+			// Set FloatingNumber = Meta damage attribute & passing in the target
+			PC->ShowFloatingNumber(Value, Props.TargetCharacter);
 		}
 	}
 }

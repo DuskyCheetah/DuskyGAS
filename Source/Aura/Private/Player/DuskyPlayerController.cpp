@@ -10,8 +10,10 @@
 #include "NavigationSystem.h"
 #include "AbilitySystem/DuskyAbilitySystemComponent.h"
 #include "Components/SplineComponent.h"
+#include "GameFramework/Character.h"
 #include "Input/DuskyInputComponent.h"
 #include "Interaction/EnemyInterface.h"
+#include "UI/Widget/FloatingTextComponent.h"
 
 ADuskyPlayerController::ADuskyPlayerController()
 {
@@ -28,6 +30,23 @@ void ADuskyPlayerController::PlayerTick(float DeltaTime)
 	CursorTrace();
 
 	AutoRun();
+}
+
+void ADuskyPlayerController::ShowFloatingNumber_Implementation(float Value, ACharacter* TargetCharacter)
+{
+	if (IsValid(TargetCharacter) && FloatingTextComponentClass)
+	{
+		// Construct FloatingTextComponent
+		UFloatingTextComponent* FloatingText = NewObject<UFloatingTextComponent>(TargetCharacter, FloatingTextComponentClass);
+		// Manually Register this component. This is normally done for us when utilizing CreateDefaultSubObject
+		FloatingText->RegisterComponent();
+		// Attach component to the target character (the character taking damage)
+		FloatingText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		// Detatch the component instantly. We only want to attach as it's starting location - then animation plays in place.
+		FloatingText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		// Set text to Value.
+		FloatingText->SetFloatingText(Value);
+	}
 }
 
 void ADuskyPlayerController::AutoRun()

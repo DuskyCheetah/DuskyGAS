@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "DuskyPlayerController.generated.h"
 
+class UFloatingTextComponent;
 struct FGameplayTag;
 class UInputMappingContext;
 class UInputAction;
@@ -26,6 +27,9 @@ class AURA_API ADuskyPlayerController : public APlayerController
 public:
 	ADuskyPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
+
+	UFUNCTION(Client, Reliable)
+	void ShowFloatingNumber(float Value, ACharacter* TargetCharacter);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -89,4 +93,7 @@ private:
 	TObjectPtr<USplineComponent> Spline;
 
 	void AutoRun();
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UFloatingTextComponent> FloatingTextComponentClass;
 };
