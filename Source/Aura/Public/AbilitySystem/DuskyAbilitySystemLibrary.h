@@ -32,4 +32,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "DuskyAbilitySystemLibrary|CharacterClassDefaults")
 	static void InitializePlayerDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
+
+	UFUNCTION(BlueprintCallable, Category = "DuskyAbilitySystemLibrary|CharacterClassDefaults")
+	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
 };

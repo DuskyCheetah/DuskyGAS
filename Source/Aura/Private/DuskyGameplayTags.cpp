@@ -61,6 +61,13 @@ void FDuskyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Attributes_Utility_DashCount = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Utility.DashCount"));
 	// End Utility Native Tag Register
 
+	// Damage Tag
+	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("Damage"));
+
+	// Begin Effect Native Tag Register
+	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"));
+	// End Effect Native Tag Register
+	
 	/*
 	 *		INPUT TAG REGISTER
 	 */ 
@@ -74,6 +81,5 @@ void FDuskyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.4"), FString("Input Tag for Key 4"));
 	// End Input Native Tag Register
 
-	// Damage Tag
-	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("Damage"));
+
 }

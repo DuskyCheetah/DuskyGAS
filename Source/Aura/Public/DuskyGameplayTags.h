@@ -69,6 +69,12 @@ public:
 	FGameplayTag Attributes_Utility_DashCount;
 	// End Utility Tags
 
+	// Damage Tag
+	FGameplayTag Damage;
+
+	// Effect Tags
+	FGameplayTag Effects_HitReact;
+	
 	/*
 	 *		INPUT TAGS
 	 */ 
@@ -82,8 +88,10 @@ public:
 	FGameplayTag InputTag_4;
 	// End Input Tags
 
-	// Damage Tag
-	FGameplayTag Damage;
+
+
+
+	
 
 private:
 	static FDuskyGameplayTags GameplayTags;

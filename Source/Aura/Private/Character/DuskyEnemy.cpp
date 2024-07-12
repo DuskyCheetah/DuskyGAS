@@ -8,6 +8,8 @@
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
 #include "UI/Widget/DuskyUserWidget.h"
+#include "DuskyGameplayTags.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 ADuskyEnemy::ADuskyEnemy()
@@ -45,11 +47,19 @@ int32 ADuskyEnemy::GetPlayerLevel()
 	return Level;
 }
 
+void ADuskyEnemy::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();
+}
+
 void ADuskyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;	// Set walk speed = to member varaible
 	InitAbilityActorInfo();
-
+	UDuskyAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);	// Grant enemy CommonAbilities
+	
 	// Obtain DuskyUserWidget & Cast to HealthBar
 	if (UDuskyUserWidget* DuskyUserWidget = Cast<UDuskyUserWidget>(HealthBar->GetUserWidgetObject()))
 	{
@@ -74,11 +84,25 @@ void ADuskyEnemy::BeginPlay()
 				OnMaxHealthChanged.Broadcast(Data.NewValue);
 			}
 		);
+
+		// Anytime an enemy receives the HitReact Tag - HitReactTagChanged will be called in response
+		AbilitySystemComponent->RegisterGameplayTagEvent(FDuskyGameplayTags::Get().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
+				this,
+				&ADuskyEnemy::HitReactTagChanged
+		);
+		
 		// Broadcast initial values of Health / Max Health
 		OnHealthChanged.Broadcast(DuskyAS->GetHealth());
 		OnMaxHealthChanged.Broadcast(DuskyAS->GetMaxHealth());
 	}
-	
+}
+
+void ADuskyEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	// Set HitReacting boolean
+	bHitReacting = NewCount > 0;
+	// MaxWalkSpeed = 0 whilst reacting - else = to BaseWalkSpeed
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
 }
 
 void ADuskyEnemy::InitAbilityActorInfo()

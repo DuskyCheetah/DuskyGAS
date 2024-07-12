@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "EnemyClassInfo.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 
 // Enum declaring RPG Classes w/i game
@@ -47,7 +48,13 @@ public:
 	// Mapping Character Class to it's DefaultInfo
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TMap<EEnemyClass, FEnemyClassDefaultInfo> EnemyClassInformation;
+
+	// Common GameplayAbilities all enemies have.
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
+	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 	
 	// Getter for ClassDefaultInfo when passed a specific Class
 	FEnemyClassDefaultInfo GetEnemyClassDefaultInfo(EEnemyClass EnemyClass);
+
+
 };

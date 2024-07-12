@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "DuskyGameplayTags.h"
+#include "Interaction/CombatInterface.h"
 
 UDuskyAttributeSet::UDuskyAttributeSet()
 {
@@ -205,6 +206,21 @@ void UDuskyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallb
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 
 			const bool bFatal = NewHealth <= 0.f;
+			if (bFatal)
+			{
+				ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
+				if (CombatInterface)
+				{
+					CombatInterface->Die();
+				}
+				
+			}
+			else
+			{
+				FGameplayTagContainer TagContainer;   // Create TagContainer required for ActivateByTag Call
+				TagContainer.AddTag(FDuskyGameplayTags::Get().Effects_HitReact);   // Add HitReact Tag to container
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);   // Pass in said container to try activate
+			}
 		}
 	}
 }
