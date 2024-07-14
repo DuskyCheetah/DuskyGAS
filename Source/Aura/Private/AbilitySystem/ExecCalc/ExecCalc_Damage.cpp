@@ -4,7 +4,9 @@
 #include "AbilitySystem/ExecCalc/ExecCalc_Damage.h"
 
 #include "AbilitySystemComponent.h"
+#include "DuskyAbilityTypes.h"
 #include "DuskyGameplayTags.h"
+#include "AbilitySystem/DuskyAbilitySystemLibrary.h"
 #include "AbilitySystem/DuskyAttributeSet.h"
 
 // Not a USTRUCT - raw internal struct not exposed to Unreal systems.
@@ -82,6 +84,9 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
+	// Obtain EffectContextHandle
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+
 	// Get Damage Set by Caller Magnitude
 	float LocalDamage = Spec.GetSetByCallerMagnitude(FDuskyGameplayTags::Get().Damage);
 
@@ -93,15 +98,22 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	
 	// BlockChance roll to determine yay or nay on blocked hit.
 	const bool bBlockedHit = FMath::RandRange(1, 100) < LocalBlock;
+	// Set Blocked Result 
+	UDuskyAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bBlockedHit);
 	if (bBlockedHit) LocalDamage = 0;
+
+
+
 
 	// Capture DodgeChance on Target and determine if they successfully dodged this hit.
 	float LocalDodge = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DodgeChanceDef, EvaluationParameters, LocalDodge);
-	LocalDodge = FMath::Max<float>(LocalDodge, 0.f);	// Clamped Dodge Chance to prevent negative values
+	LocalDodge = FMath::Max<float>(LocalDodge, 0.f);
 
 	// DodgeChance roll to determine yay or nay on Dodged Hit
 	const bool bDodgedHit = FMath::RandRange(1, 100) < LocalDodge;
+	// Set Dodge Result
+	UDuskyAbilitySystemLibrary::SetIsDodgedHit(EffectContextHandle, bDodgedHit);
 	if (bDodgedHit) LocalDamage = 0;
 	
 	// If hit was Blocked or Dodged - We don't need to further calculate damage.
@@ -138,6 +150,8 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		// Roll for Critical Hit
 		// Critical Hits deal double damage + CriticalHitDamage bonus.
 		const bool bCriticalHit = FMath::RandRange(0 , 100) < LocalSourceCritHit;
+		// Set Critical Hit Result
+		UDuskyAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bCriticalHit);
 		if (bCriticalHit) LocalDamage = LocalDamage * 2 + (LocalDamage * (LocalSourceCritDamage / 100));
 	
 	}

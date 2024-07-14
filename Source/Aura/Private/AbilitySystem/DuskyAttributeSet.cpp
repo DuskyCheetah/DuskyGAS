@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "DuskyGameplayTags.h"
+#include "AbilitySystem/DuskyAbilitySystemLibrary.h"
 #include "Interaction/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/DuskyPlayerController.h"
@@ -225,12 +226,17 @@ void UDuskyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallb
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);   // Pass in said container to try activate
 			}
 
-			ShowFloatingText(Props, LocalIncomingDamage);
+			// Obtain Block, Dodge, and CriticalHit Bools from ContextHandle
+			const bool bBlocked = UDuskyAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
+			const bool bDodged = UDuskyAbilitySystemLibrary::IsDodgedHit(Props.EffectContextHandle);
+			const bool bCriticalHit = UDuskyAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
+			
+			ShowFloatingText(Props, LocalIncomingDamage, bBlocked, bDodged, bCriticalHit);
 		}
 	}
 }
 
-void UDuskyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Value) const
+void UDuskyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Value, bool bBlockedHit, bool bDodgedHit, bool bCriticalHit) const
 {
 	// If damage source is NOT equal to target, as we don't want to show "self-damage"
 	if (Props.SourceCharacter != Props.TargetCharacter)

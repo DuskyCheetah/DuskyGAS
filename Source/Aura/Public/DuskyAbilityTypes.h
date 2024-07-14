@@ -9,9 +9,7 @@ USTRUCT(BlueprintType)
 struct FDuskyGameplayEffectContext : public FGameplayEffectContext
 {
 	GENERATED_BODY()
-
-public:	// redundant, but bear with me
-
+	
 	// Getters for hit metrics
 	bool IsBlockedHit() const { return bIsBlockedHit; }
 	bool IsDodgedHit() const { return bIsDodgedHit; }
@@ -28,6 +26,21 @@ public:	// redundant, but bear with me
 		return FGameplayEffectContext::StaticStruct();
 	}
 
+	// Creates a copy of this context, used to duplicate for later modifications
+	virtual FDuskyGameplayEffectContext* Duplicate() const
+	{
+		FDuskyGameplayEffectContext* NewContext = new FDuskyGameplayEffectContext();
+		*NewContext = *this;
+		if (GetHitResult())
+		{
+			// Does a deep copy of the hit result
+			NewContext->AddHitResult(*GetHitResult(), true);
+		}
+
+		return NewContext;
+	}
+
+	// Custom serialization, subclasses must override this
 	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess) override;
 	
 protected:
@@ -41,4 +54,15 @@ protected:
 	UPROPERTY()
 	bool bIsCriticalHit = false;
 	
+};
+
+// Defining StructOps for our custom FDuskyGameplayEffectContext, allowing us to Serialize into FArchive and make copies
+template<>
+struct TStructOpsTypeTraits<FDuskyGameplayEffectContext> : public TStructOpsTypeTraitsBase2<FDuskyGameplayEffectContext>
+{
+	enum
+	{
+		WithNetSerializer = true,
+		WithCopy = true
+	};
 };

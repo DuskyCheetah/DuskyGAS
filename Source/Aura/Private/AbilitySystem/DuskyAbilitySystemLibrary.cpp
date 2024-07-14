@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/DuskyAbilitySystemLibrary.h"
 
+#include "DuskyAbilityTypes.h"
 #include "Game/DuslyGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/WidgetController/DuskyWidgetController.h"
@@ -159,5 +160,58 @@ void UDuskyAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContex
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		ASC->GiveAbility(AbilitySpec);
+	}
+}
+
+bool UDuskyAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FDuskyGameplayEffectContext* DuskyEffectContext = static_cast<const FDuskyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuskyEffectContext->IsBlockedHit();
+	}
+	return false;
+}
+
+bool UDuskyAbilitySystemLibrary::IsDodgedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FDuskyGameplayEffectContext* DuskyEffectContext = static_cast<const FDuskyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuskyEffectContext->IsDodgedHit();
+	}
+	return false;
+}
+
+bool UDuskyAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FDuskyGameplayEffectContext* DuskyEffectContext = static_cast<const FDuskyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return DuskyEffectContext->IsCriticalHit();
+	}
+	return false;
+}
+
+void UDuskyAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle,
+	bool bInIsBlockedHit)
+{
+	if (FDuskyGameplayEffectContext* DuskyEffectContext = static_cast<FDuskyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuskyEffectContext->SetIsBlockedHit(bInIsBlockedHit);
+	}
+}
+
+void UDuskyAbilitySystemLibrary::SetIsDodgedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsDodgedHit)
+{
+	if (FDuskyGameplayEffectContext* DuskyEffectContext = static_cast<FDuskyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuskyEffectContext->SetIsDodgedHit(bInIsDodgedHit);
+	}
+}
+
+void UDuskyAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle,
+	bool bInIsCriticalHit)
+{
+	if (FDuskyGameplayEffectContext* DuskyEffectContext = static_cast<FDuskyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		DuskyEffectContext->SetIsCriticalHit(bInIsCriticalHit);
 	}
 }
