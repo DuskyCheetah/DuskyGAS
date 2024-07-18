@@ -203,36 +203,35 @@ void UDuskyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallb
 		const float LocalIncomingDamage = GetIncomingDamage();	// Catch the value of Incoming Damage
 		SetIncomingDamage(0.f);	// Reset it to zero
 
-		if (LocalIncomingDamage > 0.f)	// Only need to act if incoming damage was > zero
+		//if (LocalIncomingDamage > 0.f)	// Only need to act if incoming damage was > zero
+
+		const float NewHealth = GetHealth() - LocalIncomingDamage;
+		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+
+		const bool bFatal = NewHealth <= 0.f;
+			
+		if (bFatal)   // If damage killed target
 		{
-			const float NewHealth = GetHealth() - LocalIncomingDamage;
-			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-
-			const bool bFatal = NewHealth <= 0.f;
-			
-			if (bFatal)   // If damage killed target
+			ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
+			if (CombatInterface)
 			{
-				ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
-				if (CombatInterface)
-				{
-					CombatInterface->Die();
-				}
+				CombatInterface->Die();
+			}
 				
-			}
-			else   // Target != dead - hit react activate
-			{
-				FGameplayTagContainer TagContainer;   // Create TagContainer required for ActivateByTag Call
-				TagContainer.AddTag(FDuskyGameplayTags::Get().Effects_HitReact);   // Add HitReact Tag to container
-				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);   // Pass in said container to try activate
-			}
-
-			// Obtain Block, Dodge, and CriticalHit Bools from ContextHandle
-			const bool bBlocked = UDuskyAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
-			const bool bDodged = UDuskyAbilitySystemLibrary::IsDodgedHit(Props.EffectContextHandle);
-			const bool bCriticalHit = UDuskyAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
-			
-			ShowFloatingText(Props, LocalIncomingDamage, bBlocked, bDodged, bCriticalHit);
 		}
+		else   // Target != dead - hit react activate
+		{
+			FGameplayTagContainer TagContainer;   // Create TagContainer required for ActivateByTag Call
+			TagContainer.AddTag(FDuskyGameplayTags::Get().Effects_HitReact);   // Add HitReact Tag to container
+			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);   // Pass in said container to try activate
+		}
+
+		// Obtain Block, Dodge, and CriticalHit Bools from ContextHandle
+		const bool bBlocked = UDuskyAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
+		const bool bDodged = UDuskyAbilitySystemLibrary::IsDodgedHit(Props.EffectContextHandle);
+		const bool bCriticalHit = UDuskyAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
+			
+		ShowFloatingText(Props, LocalIncomingDamage, bBlocked, bDodged, bCriticalHit);
 	}
 }
 
@@ -245,7 +244,7 @@ void UDuskyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float 
 		if (ADuskyPlayerController* PC = Cast<ADuskyPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
 		{
 			// Set FloatingNumber = Meta damage attribute & passing in the target
-			PC->ShowFloatingNumber(Value, Props.TargetCharacter);
+			PC->ShowFloatingNumber(Value, Props.TargetCharacter, bBlockedHit, bDodgedHit, bCriticalHit);
 		}
 	}
 }

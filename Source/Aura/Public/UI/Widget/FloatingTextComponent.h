@@ -15,5 +15,5 @@ class AURA_API UFloatingTextComponent : public UWidgetComponent
 	GENERATED_BODY()
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void SetFloatingText(float Value);
+	void SetFloatingText(float Value, bool bBlockedHit, bool bDodgedHit, bool bCriticalHit);
 };

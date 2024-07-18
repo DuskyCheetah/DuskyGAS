@@ -102,24 +102,26 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	UDuskyAbilitySystemLibrary::SetIsBlockedHit(EffectContextHandle, bBlockedHit);
 	if (bBlockedHit) LocalDamage = 0;
 
-
-
-
-	// Capture DodgeChance on Target and determine if they successfully dodged this hit.
-	float LocalDodge = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DodgeChanceDef, EvaluationParameters, LocalDodge);
-	LocalDodge = FMath::Max<float>(LocalDodge, 0.f);
-
-	// DodgeChance roll to determine yay or nay on Dodged Hit
-	const bool bDodgedHit = FMath::RandRange(1, 100) < LocalDodge;
-	// Set Dodge Result
-	UDuskyAbilitySystemLibrary::SetIsDodgedHit(EffectContextHandle, bDodgedHit);
-	if (bDodgedHit) LocalDamage = 0;
 	
-	// If hit was Blocked or Dodged - We don't need to further calculate damage.
-	if (!bBlockedHit && !bDodgedHit)
+	// If hit was Blocked - We don't need to further calculate damage.
+	if (!bBlockedHit)
 	{
-		// Capture Armor from Target for Damage mitigation calculations
+
+		// Capture DodgeChance on Target and determine if they successfully dodged this hit.
+		float LocalDodge = 0.f;
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DodgeChanceDef, EvaluationParameters, LocalDodge);
+		LocalDodge = FMath::Max<float>(LocalDodge, 0.f);
+
+		// DodgeChance roll to determine yay or nay on Dodged Hit
+		const bool bDodgedHit = FMath::RandRange(1, 100) < LocalDodge;
+		// Set Dodge Result
+		UDuskyAbilitySystemLibrary::SetIsDodgedHit(EffectContextHandle, bDodgedHit);
+		if (bDodgedHit) LocalDamage = 0;
+
+		// If hit was Dodged - No further calculations needed.
+		if (!bDodgedHit)
+		{
+			// Capture Armor from Target for Damage mitigation calculations
 		float LocalTargetArmor = 0.f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters, LocalTargetArmor);
 		LocalTargetArmor = FMath::Max<float>(LocalTargetArmor, 0.f);
@@ -153,7 +155,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		// Set Critical Hit Result
 		UDuskyAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bCriticalHit);
 		if (bCriticalHit) LocalDamage = LocalDamage * 2 + (LocalDamage * (LocalSourceCritDamage / 100));
-	
+		}
 	}
 	
 	// Construct EvaluatedData, Obtain Damage Meta Attribute, Declare Modifer Operation, and involve our LocalDamage variable

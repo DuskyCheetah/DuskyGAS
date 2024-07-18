@@ -32,7 +32,7 @@ void ADuskyPlayerController::PlayerTick(float DeltaTime)
 	AutoRun();
 }
 
-void ADuskyPlayerController::ShowFloatingNumber_Implementation(float Value, ACharacter* TargetCharacter)
+void ADuskyPlayerController::ShowFloatingNumber_Implementation(float Value, ACharacter* TargetCharacter, bool bBlockedHit, bool bDodgedHit, bool bCriticalHit)
 {
 	if (IsValid(TargetCharacter) && FloatingTextComponentClass)
 	{
@@ -45,7 +45,7 @@ void ADuskyPlayerController::ShowFloatingNumber_Implementation(float Value, ACha
 		// Detatch the component instantly. We only want to attach as it's starting location - then animation plays in place.
 		FloatingText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 		// Set text to Value.
-		FloatingText->SetFloatingText(Value);
+		FloatingText->SetFloatingText(Value, bBlockedHit, bDodgedHit, bCriticalHit);
 	}
 }
 
