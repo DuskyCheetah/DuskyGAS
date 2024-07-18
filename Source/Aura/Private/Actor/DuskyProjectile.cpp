@@ -54,7 +54,7 @@ void ADuskyProjectile::Destroyed()
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		// Spawn Niagara impact effect at location of Overlap
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		LoopingSoundComponent.Get()->Stop();
+		if (LoopingSoundComponent) LoopingSoundComponent.Get()->Stop();
 	}
 	Super::Destroyed();
 }
@@ -66,7 +66,7 @@ void ADuskyProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent,
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 	// Spawn Niagara impact effect at location of Overlap
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	LoopingSoundComponent.Get()->Stop();
+	if (LoopingSoundComponent) LoopingSoundComponent.Get()->Stop();
 
 	if (HasAuthority())
 	{

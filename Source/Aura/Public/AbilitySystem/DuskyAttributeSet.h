@@ -112,6 +112,22 @@ public:
 	ATTRIBUTE_ACCESSORS(UDuskyAttributeSet, DodgeChance);
 	// End Defensive Attributes
 	//***************************************************************
+	// Begin Resistance Attributes
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData FireResistance;
+	ATTRIBUTE_ACCESSORS(UDuskyAttributeSet, FireResistance);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FrostResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData FrostResistance;
+	ATTRIBUTE_ACCESSORS(UDuskyAttributeSet, FrostResistance);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData LightningResistance;
+	ATTRIBUTE_ACCESSORS(UDuskyAttributeSet, LightningResistance);
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CausticResistance, Category = "Resistance Attributes")
+	FGameplayAttributeData CausticResistance;
+	ATTRIBUTE_ACCESSORS(UDuskyAttributeSet, CausticResistance);
+
+	// End Resistance Attributes
+	//***************************************************************
 	// Begin Recovery Attributes
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegen, Category = "Recovery Attributes")
 	FGameplayAttributeData HealthRegen;
@@ -218,6 +234,17 @@ public:
 	UFUNCTION()
 	void OnRep_DodgeChance(const FGameplayAttributeData& OldDodgeChance) const;
 	// End Defensive OnReps
+	//***************************************************************
+	// Begin Resistance OnReps
+	UFUNCTION()
+	void OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const;
+	UFUNCTION()
+	void OnRep_FrostResistance(const FGameplayAttributeData& OldFrostResistance) const;
+	UFUNCTION()
+	void OnRep_LightningResistance(const FGameplayAttributeData& OldLightningResistance) const;
+	UFUNCTION()
+	void OnRep_CausticResistance(const FGameplayAttributeData& OldCausticResistance) const;
+	// End Resistance OnReps
 	//***************************************************************
 	// Begin Recovery OnReps
 	UFUNCTION()

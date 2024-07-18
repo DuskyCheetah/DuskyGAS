@@ -39,8 +39,17 @@ public:
 	FGameplayTag Attributes_Defensive_Armor;
 	FGameplayTag Attributes_Defensive_BlockChance;
 	FGameplayTag Attributes_Defensive_DodgeChance;
+	
 	// End Defensive Tags
 
+	// Begin Damage Resistances
+	FGameplayTag Attributes_Resistance_Fire;
+	FGameplayTag Attributes_Resistance_Frost;
+	FGameplayTag Attributes_Resistance_Lightning;
+	FGameplayTag Attributes_Resistance_Physical;
+	FGameplayTag Attributes_Resistance_Caustic;
+	// End Damage Resistances
+	
 	// Begin Recovery Tags
 	FGameplayTag Attributes_Recovery_HealthRegen;
 	FGameplayTag Attributes_Recovery_ManaRegen;
@@ -69,9 +78,19 @@ public:
 	FGameplayTag Attributes_Utility_DashCount;
 	// End Utility Tags
 
-	// Damage Tag
+	// Begin Damage / Damage Types Tags
 	FGameplayTag Damage;
+	FGameplayTag Damage_Fire;
+	FGameplayTag Damage_Frost;
+	FGameplayTag Damage_Lightning;
+	FGameplayTag Damage_Physical;
+	FGameplayTag Damage_Caustic;
+	
+	// Map Damage Types to respective Game Type Resistance
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResists;
+	// End Damage / Damage Types Tags
 
+	
 	// Effect Tags
 	FGameplayTag Effects_HitReact;
 	

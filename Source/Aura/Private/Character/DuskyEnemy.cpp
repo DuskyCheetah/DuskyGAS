@@ -58,7 +58,11 @@ void ADuskyEnemy::BeginPlay()
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;	// Set walk speed = to member varaible
 	InitAbilityActorInfo();
-	UDuskyAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);	// Grant enemy CommonAbilities
+	if (HasAuthority())
+	{
+		UDuskyAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);	// Grant enemy CommonAbilities
+	}
+
 	
 	// Obtain DuskyUserWidget & Cast to HealthBar
 	if (UDuskyUserWidget* DuskyUserWidget = Cast<UDuskyUserWidget>(HealthBar->GetUserWidgetObject()))
@@ -111,7 +115,11 @@ void ADuskyEnemy::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UDuskyAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 
-	InitializeDefaultAttributes();
+	if (HasAuthority())
+	{
+		InitializeDefaultAttributes();
+	}
+	
 }
 
 void ADuskyEnemy::InitializeDefaultAttributes() const

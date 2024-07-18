@@ -37,6 +37,13 @@ UDuskyAttributeSet::UDuskyAttributeSet()
 	TagsToAttributes.Add(GameplayTags.Attributes_Defensive_DodgeChance, GetDodgeChanceAttribute);
 	// End Add Defensive Stats to Map
 
+	// Begin Add Resistance Stats to Map
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Fire, GetFireResistanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Frost, GetFrostResistanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Lightning, GetLightningResistanceAttribute);
+	TagsToAttributes.Add(GameplayTags.Attributes_Resistance_Caustic, GetCausticResistanceAttribute);
+	// End Add Resistance Stats to Map
+
 	// Begin Add Recovery Stats to Map
 	TagsToAttributes.Add(GameplayTags.Attributes_Recovery_HealthRegen, GetHealthRegenAttribute);
 	TagsToAttributes.Add(GameplayTags.Attributes_Recovery_ManaRegen, GetManaRegenAttribute);
@@ -92,6 +99,13 @@ void UDuskyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, BlockChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, DodgeChance, COND_None, REPNOTIFY_Always);
 	// End Defensive Attribute Register
+
+	// Begin Resistance Attribute Register
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, FireResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, FrostResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, LightningResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, CausticResistance, COND_None, REPNOTIFY_Always);
+	// End Resistance Attribute Register
 
 	// Begin Recovery Attribute Register
 	DOREPLIFETIME_CONDITION_NOTIFY(UDuskyAttributeSet, HealthRegen, COND_None, REPNOTIFY_Always);
@@ -301,6 +315,28 @@ void UDuskyAttributeSet::OnRep_DodgeChance(const FGameplayAttributeData& OldDodg
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, MaxMana, OldDodgeChance);
 }
 // End Defensive OnRep Definitions
+
+// Begin Resistance OnRep Definition
+void UDuskyAttributeSet::OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, FireResistance, OldFireResistance);
+}
+
+void UDuskyAttributeSet::OnRep_FrostResistance(const FGameplayAttributeData& OldFrostResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, FrostResistance, OldFrostResistance);
+}
+
+void UDuskyAttributeSet::OnRep_LightningResistance(const FGameplayAttributeData& OldLightningResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, LightningResistance, OldLightningResistance);
+}
+
+void UDuskyAttributeSet::OnRep_CausticResistance(const FGameplayAttributeData& OldCausticResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UDuskyAttributeSet, CausticResistance, OldCausticResistance);
+}
+// End Resistance OnRep Definition
 
 // Begin Recovery OnRep Definitions
 void UDuskyAttributeSet::OnRep_HealthRegen(const FGameplayAttributeData& OldHealthRegen) const

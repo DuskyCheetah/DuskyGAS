@@ -18,12 +18,17 @@ struct DuskyDamageStatics
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(DodgeChance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(FireResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(FrostResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(LightningResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(CausticResistance);
 
 	// Source Attributes
 	DECLARE_ATTRIBUTE_CAPTUREDEF(ArmorPen);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitChance);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitDamage);
 
+	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;
 	
 	DuskyDamageStatics()
 	{
@@ -33,11 +38,28 @@ struct DuskyDamageStatics
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UDuskyAttributeSet, Armor, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UDuskyAttributeSet, BlockChance, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UDuskyAttributeSet, DodgeChance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UDuskyAttributeSet, FireResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UDuskyAttributeSet, FrostResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UDuskyAttributeSet, LightningResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UDuskyAttributeSet, CausticResistance, Target, false);
 
 		// Source Attributes
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UDuskyAttributeSet, ArmorPen, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UDuskyAttributeSet, CriticalHitChance, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UDuskyAttributeSet, CriticalHitDamage, Source, false);
+
+		// Map AttributeDefs to respective Attribute gameplay tag.
+		TagsToCaptureDefs.Add(FDuskyGameplayTags::Get().Attributes_Defensive_Armor, ArmorDef);
+		TagsToCaptureDefs.Add(FDuskyGameplayTags::Get().Attributes_Defensive_BlockChance, BlockChanceDef);
+		TagsToCaptureDefs.Add(FDuskyGameplayTags::Get().Attributes_Defensive_DodgeChance, DodgeChanceDef);
+		TagsToCaptureDefs.Add(FDuskyGameplayTags::Get().Attributes_Resistance_Fire, FireResistanceDef);
+		TagsToCaptureDefs.Add(FDuskyGameplayTags::Get().Attributes_Resistance_Frost, FrostResistanceDef);
+		TagsToCaptureDefs.Add(FDuskyGameplayTags::Get().Attributes_Resistance_Lightning, LightningResistanceDef);
+		TagsToCaptureDefs.Add(FDuskyGameplayTags::Get().Attributes_Resistance_Caustic, CausticResistanceDef);
+		TagsToCaptureDefs.Add(FDuskyGameplayTags::Get().Attributes_Offensive_ArmorPen, ArmorPenDef);
+		TagsToCaptureDefs.Add(FDuskyGameplayTags::Get().Attributes_Offensive_CriticalHitChance, CriticalHitChanceDef);
+		TagsToCaptureDefs.Add(FDuskyGameplayTags::Get().Attributes_Offensive_CriticalHitDamage, CriticalHitDamageDef);
+		
 	}
 };
 
@@ -59,6 +81,10 @@ UExecCalc_Damage::UExecCalc_Damage()
 	RelevantAttributesToCapture.Add(DamageStatics().DodgeChanceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitChanceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitDamageDef);
+	RelevantAttributesToCapture.Add(DamageStatics().FireResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().FrostResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().LightningResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().CausticResistanceDef);
 }
 
 void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
@@ -87,9 +113,35 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	// Obtain EffectContextHandle
 	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
 
-	// Get Damage Set by Caller Magnitude
-	float LocalDamage = Spec.GetSetByCallerMagnitude(FDuskyGameplayTags::Get().Damage);
+	// Local Damage variable for processing
+	float LocalDamage = 0.f;
 
+	// Loop through all damage types and add value to damage - if damage type was found
+	for (const TTuple<FGameplayTag, FGameplayTag>& Pair : FDuskyGameplayTags::Get().DamageTypesToResists)
+	{
+		// Obtain DamageType and corresponding ResistanceTag from current element.
+		const FGameplayTag DamageType = Pair.Key;
+		const FGameplayTag ResistanceTag = Pair.Value;
+
+		
+		// Check if current ResistanceTag is found within Map - crash message just in case.
+		//checkf(DuskyDamageStatics().TagsToCaptureDefs.Contains(ResistanceTag), TEXT("TagsToCaptureDefs doesn't contain Tag: [%s] in ExecCalc_Damage"), *ResistanceTag.ToString());
+		//const FGameplayEffectAttributeCaptureDefinition CaptureDef = DuskyDamageStatics().TagsToCaptureDefs[ResistanceTag];
+
+		float DamageTypeValue = Spec.GetSetByCallerMagnitude(Pair.Key);
+		
+		float LocalResistance = 0.f;
+		// Capture the resistance value in a local resistance variable.
+		//ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluationParameters, LocalResistance);
+		// Clamp Resistance attribute between 0% and 80%
+		//LocalResistance = FMath::Clamp(LocalResistance, 0.f, 80.f);
+
+		// Mitigate Damage value in regard to Resistance value.
+		//DamageTypeValue *= ( 100.f - LocalResistance ) / 100.f;	// TODO: I do not want resistance to be a 1:1 ratio. Work out a formula.
+		
+		// DamageTypeValue returns 0 if not found - so this adds all relevant damage type values.
+		LocalDamage += DamageTypeValue;
+	}
 	
 	// Capture BlockChance on Target, and determine if there was a successful block.
 	float LocalBlock = 0.f;

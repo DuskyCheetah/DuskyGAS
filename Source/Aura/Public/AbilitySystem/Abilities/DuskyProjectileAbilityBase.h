@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/DuskyGameplayAbility.h"
+#include "AbilitySystem/Abilities/DuskyDamageGameplayAbility.h"
 #include "DuskyProjectileAbilityBase.generated.h"
 
 class ADuskyProjectile;
@@ -13,7 +13,7 @@ class UGameplayEffect;
  * 
  */
 UCLASS()
-class AURA_API UDuskyProjectileAbilityBase : public UDuskyGameplayAbility
+class AURA_API UDuskyProjectileAbilityBase : public UDuskyDamageGameplayAbility
 {
 	GENERATED_BODY()
 public:
@@ -29,6 +29,5 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ADuskyProjectile> ProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
 };

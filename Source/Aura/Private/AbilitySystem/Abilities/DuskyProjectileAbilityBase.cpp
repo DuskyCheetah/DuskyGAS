@@ -15,10 +15,6 @@ void UDuskyProjectileAbilityBase::ActivateAbility(const FGameplayAbilitySpecHand
                                                   const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
-	
-	
-
 	
 }
 
@@ -67,10 +63,15 @@ void UDuskyProjectileAbilityBase::SpawnProjectile(const FVector& ProjectileTarge
 
 		// Obtain Native Gameplay Tags
 		FDuskyGameplayTags GameplayTags = FDuskyGameplayTags::Get();
-		// Obtain AbilityLevel for magnitude application.
-		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, FString::Printf(TEXT("Firebolt Damage %f"), ScaledDamage));
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Damage, ScaledDamage);
+
+		for (auto& Pair : DamageTypes)
+		{
+			// Obtain AbilityLevel for magnitude application.
+			const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
+			// 
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
+		}
+		
 		// Assigned Projectiles SpecHandle to the created SpecHandle with DamageEffectClass GE.
 		Projectile->DamageEffectSpecHandle = SpecHandle;
 		

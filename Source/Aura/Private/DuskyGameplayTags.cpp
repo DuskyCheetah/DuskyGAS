@@ -33,6 +33,14 @@ void FDuskyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Attributes_Defensive_DodgeChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Defensive.DodgeChance"));
 	// End Defensive Native Tag Register
 
+	// Begin Resistance Native Tag Register
+	GameplayTags.Attributes_Resistance_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Fire"), FString("Resistance to the Fire Damage Type"));
+	GameplayTags.Attributes_Resistance_Frost = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Frost"), FString("Resistance to the Frost Damage Type"));
+	GameplayTags.Attributes_Resistance_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Lightning"), FString("Resistance to the Lightning Damage Type"));
+	GameplayTags.Attributes_Resistance_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Physical"), FString("Resistance to the Physical Damage Type"));
+	GameplayTags.Attributes_Resistance_Caustic = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Caustic"), FString("Resistance to the Caustic Damage Type"));
+	// End Resistance Native Tag Register
+	
 	// Begin Recovery Native Tag Register
 	GameplayTags.Attributes_Recovery_HealthRegen = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Recovery.HealthRegen"));
 	GameplayTags.Attributes_Recovery_ManaRegen = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Recovery.ManaRegen"));
@@ -61,8 +69,21 @@ void FDuskyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Attributes_Utility_DashCount = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Utility.DashCount"));
 	// End Utility Native Tag Register
 
-	// Damage Tag
+	// Begin Damage / Damage Type Tags
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("Damage"));
+	GameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fire"), FString("Fire Damage Type"));
+	GameplayTags.Damage_Frost = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Frost"), FString("Frost Damage Type"));
+	GameplayTags.Damage_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Lightning"), FString("Lightning Damage Type"));
+	GameplayTags.Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Physical"), FString("Physical Damage Type"));
+	GameplayTags.Damage_Caustic = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Caustic"), FString("Caustic Damage Type"));
+
+	/* Map each damage type to its respective damage type resistance */
+	GameplayTags.DamageTypesToResists.Add(GameplayTags.Damage_Fire, GameplayTags.Attributes_Resistance_Fire);
+	GameplayTags.DamageTypesToResists.Add(GameplayTags.Damage_Frost, GameplayTags.Attributes_Resistance_Frost);
+	GameplayTags.DamageTypesToResists.Add(GameplayTags.Damage_Lightning, GameplayTags.Attributes_Resistance_Lightning);
+	GameplayTags.DamageTypesToResists.Add(GameplayTags.Damage_Physical, GameplayTags.Attributes_Resistance_Physical);
+	GameplayTags.DamageTypesToResists.Add(GameplayTags.Damage_Caustic, GameplayTags.Attributes_Resistance_Caustic);
+	// End Damage / Damage Type Tags
 
 	// Begin Effect Native Tag Register
 	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"));
