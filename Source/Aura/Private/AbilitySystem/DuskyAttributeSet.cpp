@@ -255,7 +255,7 @@ void UDuskyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float 
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
 		// Obtain DuskyPlayerController & check validity of pointer
-		if (ADuskyPlayerController* PC = Cast<ADuskyPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+		if (ADuskyPlayerController* PC = Cast<ADuskyPlayerController>(Props.SourceCharacter->Controller))
 		{
 			// Set FloatingNumber = Meta damage attribute & passing in the target
 			PC->ShowFloatingNumber(Value, Props.TargetCharacter, bBlockedHit, bDodgedHit, bCriticalHit);

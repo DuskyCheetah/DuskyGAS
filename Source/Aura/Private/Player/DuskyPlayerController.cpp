@@ -34,7 +34,7 @@ void ADuskyPlayerController::PlayerTick(float DeltaTime)
 
 void ADuskyPlayerController::ShowFloatingNumber_Implementation(float Value, ACharacter* TargetCharacter, bool bBlockedHit, bool bDodgedHit, bool bCriticalHit)
 {
-	if (IsValid(TargetCharacter) && FloatingTextComponentClass)
+	if (IsValid(TargetCharacter) && FloatingTextComponentClass && IsLocalController())
 	{
 		// Construct FloatingTextComponent
 		UFloatingTextComponent* FloatingText = NewObject<UFloatingTextComponent>(TargetCharacter, FloatingTextComponentClass);
