@@ -9,6 +9,9 @@
 #include "Components/WidgetComponent.h"
 #include "UI/Widget/DuskyUserWidget.h"
 #include "DuskyGameplayTags.h"
+#include "AI/DuskyAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -26,6 +29,19 @@ ADuskyEnemy::ADuskyEnemy()
 	// Create HealthBar widget & Set attachment to root component.
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
+}
+
+void ADuskyEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	// AI only matters on the server, so ensure we have authority.
+	if (!HasAuthority()) return;
+
+	// Initialize Controller, Blackboard, and BehaviorTree
+	DuskyAIController = Cast<ADuskyAIController>(NewController);
+	DuskyAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	DuskyAIController->RunBehaviorTree(BehaviorTree);
 }
 
 void ADuskyEnemy::HighlightActor()

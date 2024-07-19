@@ -31,7 +31,7 @@ void UDuskyProjectileAbilityBase::SpawnProjectile(const FVector& ProjectileTarge
 		const FVector SocketLocation = CombatInterface->GetCombatSocketLocation();
 		// Vector from SocketLocation (SOURCE) to ProjectileTargetLocation (TARGET)
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
-		
+		Rotation.Pitch = 0.f;
 
 		// Create Local SpawnTransform & set = to Weapon/Body Spawn Location Socket
 		FTransform SpawnTransform;

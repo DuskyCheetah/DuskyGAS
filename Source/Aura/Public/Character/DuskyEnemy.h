@@ -10,6 +10,8 @@
 #include "DuskyEnemy.generated.h"
 
 class UWidgetComponent;
+class UBehaviorTree;
+class ADuskyAIController;
 
 /**
  * 
@@ -20,6 +22,7 @@ class AURA_API ADuskyEnemy : public ADuskyCharacterBase, public IEnemyInterface
 	GENERATED_BODY()
 public:
 	ADuskyEnemy();
+	virtual void PossessedBy(AController* NewController) override;
 
 	// Enemy Interface
 	virtual void HighlightActor() override;
@@ -61,7 +64,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
 
-	
+	UPROPERTY(EditAnywhere, Category = "AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<ADuskyAIController> DuskyAIController;
 };
 
 
