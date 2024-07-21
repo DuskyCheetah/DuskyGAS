@@ -23,6 +23,8 @@ void ADuskyEffectActor::BeginPlay()
 
 void ADuskyEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
+	if (TargetActor->ActorHasTag(FName("Enemy")) && !bApplyEffectsToEnemies) return;
+		
 	// Use ASC getter from EPIC ASCBlueprintLibrary Func "GetAbilitySystemComponent"
 	// and store in a ASC Ptr.
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
@@ -48,10 +50,18 @@ void ADuskyEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGa
 		// Store the TargetASC and EffectHandle in a map - for reference
 		ActiveEffectHandles.Add(ActiveEffectHandle, TargetASC);
 	}
+
+	// If GE = Instant AND DestroyOnEffectApp boolean is set to true, destroy effect actor
+	if (bDestroyOnEffectApplication && !bIsInfinite)
+	{
+		Destroy();
+	}
 }
 
 void ADuskyEffectActor::OnOverlap(AActor* TargetActor)
 {
+	if (TargetActor->ActorHasTag(FName("Enemy")) && !bApplyEffectsToEnemies) return;
+	
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
@@ -68,6 +78,8 @@ void ADuskyEffectActor::OnOverlap(AActor* TargetActor)
 
 void ADuskyEffectActor::OnEndOverlap(AActor* TargetActor)
 {
+	if (TargetActor->ActorHasTag(FName("Enemy")) && !bApplyEffectsToEnemies) return;
+	
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);

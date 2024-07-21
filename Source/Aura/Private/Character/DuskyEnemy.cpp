@@ -24,6 +24,14 @@ ADuskyEnemy::ADuskyEnemy()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
+	// Disabling these features, as the rotation within Character Movement Comp is much smoother.
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
+
+	// This is the smooth one.
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+
 	AttributeSet = CreateDefaultSubobject<UDuskyAttributeSet>("AttrbuteSet");	// TODO: Fix this typo in all locations.
 
 	// Create HealthBar widget & Set attachment to root component.
@@ -42,6 +50,9 @@ void ADuskyEnemy::PossessedBy(AController* NewController)
 	DuskyAIController = Cast<ADuskyAIController>(NewController);
 	DuskyAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	DuskyAIController->RunBehaviorTree(BehaviorTree);
+	// Set Blackboard key values 
+	DuskyAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
+	DuskyAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedMob"), bIsRangedMob);
 }
 
 void ADuskyEnemy::HighlightActor()
@@ -123,6 +134,12 @@ void ADuskyEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCo
 	bHitReacting = NewCount > 0;
 	// MaxWalkSpeed = 0 whilst reacting - else = to BaseWalkSpeed
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	// Set blackboard key bool each time the value changes
+	if (DuskyAIController && DuskyAIController->GetBlackboardComponent())
+	{
+		DuskyAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
+	}
+	
 }
 
 void ADuskyEnemy::InitAbilityActorInfo()

@@ -49,6 +49,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float LifeSpan = 5.f;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	bool bIsRangedMob = false;
 	
 protected:
 	virtual void BeginPlay() override;
