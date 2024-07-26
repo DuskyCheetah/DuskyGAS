@@ -78,6 +78,70 @@ public:
 	FGameplayTag Attributes_Utility_DashCount;
 	// End Utility Tags
 
+	/*
+	*		SET BY CALLER TAGS
+	*/
+
+	// Begin SetByCaller Core Tags
+	FGameplayTag SetByCaller_Core_Strength;
+	FGameplayTag SetByCaller_Core_Vitality;
+	FGameplayTag SetByCaller_Core_Intelligence;
+	FGameplayTag SetByCaller_Core_Dexterity;
+	// End SetByCaller Core Tags
+
+	// Begin SetByCaller Vital Tags
+	FGameplayTag SetByCaller_Vital_Health;
+	FGameplayTag SetByCaller_Vital_MaxHealth;
+	FGameplayTag SetByCaller_Vital_Mana;
+	FGameplayTag SetByCaller_Vital_MaxMana;
+	// End SetByCaller Vital Tags
+
+	// Begin SetByCaller Defensive Tags
+	FGameplayTag SetByCaller_Defensive_Armor;
+	FGameplayTag SetByCaller_Defensive_BlockChance;
+	FGameplayTag SetByCaller_Defensive_DodgeChance;
+	// End SetByCaller Defensive Tags
+
+	// Begin SetByCaller Damage Resistances
+	FGameplayTag SetByCaller_Resistance_Fire;
+	FGameplayTag SetByCaller_Resistance_Frost;
+	FGameplayTag SetByCaller_Resistance_Lightning;
+	FGameplayTag SetByCaller_Resistance_Physical;
+	FGameplayTag SetByCaller_Resistance_Caustic;
+	// End SetByCaller Damage Resistances
+	
+	// Begin SetByCaller Recovery Tags
+	FGameplayTag SetByCaller_Recovery_HealthRegen;
+	FGameplayTag SetByCaller_Recovery_ManaRegen;
+	FGameplayTag SetByCaller_Recovery_Leech;
+	FGameplayTag SetByCaller_Recovery_LifeOnHit;
+	// End SetByCaller Recovery Tags
+
+	// Begin SetByCaller Offensive Tags
+	FGameplayTag SetByCaller_Offensive_CriticalHitChance;
+	FGameplayTag SetByCaller_Offensive_CriticalHitDamage;
+	FGameplayTag SetByCaller_Offensive_ActionSpeed;
+	FGameplayTag SetByCaller_Offensive_AttackPower;
+	FGameplayTag SetByCaller_Offensive_SpellPower;
+	FGameplayTag SetByCaller_Offensive_Area;
+	FGameplayTag SetByCaller_Offensive_Multicast;
+	FGameplayTag SetByCaller_Offensive_Range;
+	FGameplayTag SetByCaller_Offensive_ExtraProj;
+	FGameplayTag SetByCaller_Offensive_ArmorPen;
+	// End SetByCaller Offensive Tags
+
+	// Begin SetByCaller Utility Tags
+	FGameplayTag SetByCaller_Utility_MovementSpeed;
+	FGameplayTag SetByCaller_Utility_CooldownReduction;
+	FGameplayTag SetByCaller_Utility_PickupRadius;
+	FGameplayTag SetByCaller_Utility_GoldFind;
+	FGameplayTag SetByCaller_Utility_DashCount;
+	// End SetByCaller Utility Tags
+
+	/*
+	*		DAMAGE TAGS
+	*/
+	
 	// Begin Damage / Damage Types Tags
 	FGameplayTag Damage;
 	FGameplayTag Damage_Fire;
@@ -107,10 +171,25 @@ public:
 	FGameplayTag InputTag_4;
 	// End Input Tags
 
+	/*
+	 *		EQUIPMENT TAGS
+	 */ 
 
-
-
-	
+	// Begin Equipped Gear Tags
+	FGameplayTag Equipment_Slot_Head;
+	FGameplayTag Equipment_Slot_Shoulder;
+	FGameplayTag Equipment_Slot_Amulet;
+	FGameplayTag Equipment_Slot_Cloak;
+	FGameplayTag Equipment_Slot_Chest;
+	FGameplayTag Equipment_Slot_Bracers;
+	FGameplayTag Equipment_Slot_Gloves;
+	FGameplayTag Equipment_Slot_Belt;
+	FGameplayTag Equipment_Slot_Pants;
+	FGameplayTag Equipment_Slot_Boots;
+	FGameplayTag Equipment_Slot_Ring;
+	FGameplayTag Equipment_Slot_MainHand;
+	FGameplayTag Equipment_Slot_OffHand;
+	// End Equipped Gear Tags
 
 private:
 	static FDuskyGameplayTags GameplayTags;

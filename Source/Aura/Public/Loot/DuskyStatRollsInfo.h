@@ -8,7 +8,44 @@
 #include "DuskyStatRollsInfo.generated.h"
 
 UENUM()
-enum class EStatTiers : uint8
+enum EStatRoll
+{
+	Strength,
+	Vitality,
+	Intelligence,
+	Dexterity,
+	MaxHealth,
+	MaxMana,
+	Armor,
+	BlockChance,
+	DodgeChance,
+	FireResistance,
+	FrostResistance,
+	LightningResistance,
+	CausticResistance,
+	HealthRegen,
+	ManaRegen,
+	LifeOnHit,
+	Leech,
+	CriticalHitChance,
+	CriticalHitDamage,
+	ActionSpeed,
+	AttackPower,
+	SpellPower,
+	Area,
+	Multicast,
+	Range,
+	ExtraProj,
+	ArmorPen,
+	MovementSpeed,
+	CooldownReduction,
+	PickupRadius,
+	GoldFind,
+	DashCount,
+};
+
+UENUM()
+enum EStatTiers 
 {
 	T0,
 	T1,
@@ -21,7 +58,7 @@ enum class EStatTiers : uint8
 };
 
 UENUM()
-enum class StatType : uint8
+enum EStatTypeRoll 
 {
 	Prefix,
 	Suffix
@@ -38,15 +75,15 @@ struct FStatRollInfo
 
 	// Stat Name
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FText AttributeName = FText();
+	TEnumAsByte<EStatRoll> Stat;
 
 	// Prefix or Suffix Designator
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TEnumAsByte<StatType> Type; 
+	TEnumAsByte<EStatTypeRoll> Type;
 
 	// Roll Tier and Corresponding Maximum Roll Value
 	UPROPERTY(EditDefaultsOnly)
-	TMap<EStatTiers, float> StatTiers;
+	TMap<TEnumAsByte<EStatTiers>, float> StatTiers;
 };
 
 /**

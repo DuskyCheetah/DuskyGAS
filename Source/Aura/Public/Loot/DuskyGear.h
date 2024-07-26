@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
+#include "Loot/DuskyItemBase.h"
+#include "DuskyGear.generated.h"
+
 enum EItemType
 {
 	Helm,
@@ -20,10 +24,6 @@ enum EItemType
 	OffHand
 	
 };
-
-#include "CoreMinimal.h"
-#include "Loot/DuskyItemBase.h"
-#include "DuskyGear.generated.h"
 
 /**
  * 

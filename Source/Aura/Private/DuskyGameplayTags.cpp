@@ -69,6 +69,70 @@ void FDuskyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Attributes_Utility_DashCount = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Utility.DashCount"));
 	// End Utility Native Tag Register
 
+	/*
+	 *		SETBYCALLER TAG REGISTER
+	 */ 
+	
+	// Begin Core Native Tag Register
+	GameplayTags.SetByCaller_Core_Strength = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Core.Strength"));
+	GameplayTags.SetByCaller_Core_Vitality = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Core.Vitality"));
+	GameplayTags.SetByCaller_Core_Intelligence = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Core.Intelligence"));
+	GameplayTags.SetByCaller_Core_Dexterity = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Core.Dexterity"));
+	// End Core Native Tag Register
+
+	// Begin Vital Native Tag Register
+	GameplayTags.SetByCaller_Vital_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Vital.Health"));
+	GameplayTags.SetByCaller_Vital_MaxHealth = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Vital.MaxHealth"));
+	GameplayTags.SetByCaller_Vital_Mana = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Vital.Mana"));
+	GameplayTags.SetByCaller_Vital_MaxMana = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Vital.MaxMana"));
+	// End Vital Native Tag Register
+
+	// Begin Defensive Native Tag Register
+	GameplayTags.SetByCaller_Defensive_Armor = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Defensive.Armor"));
+	GameplayTags.SetByCaller_Defensive_BlockChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Defensive.BlockChance"));
+	GameplayTags.SetByCaller_Defensive_DodgeChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Defensive.DodgeChance"));
+	// End Defensive Native Tag Register
+
+	// Begin Resistance Native Tag Register
+	GameplayTags.SetByCaller_Resistance_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Resistance.Fire"));
+	GameplayTags.SetByCaller_Resistance_Frost = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Resistance.Frost"));
+	GameplayTags.SetByCaller_Resistance_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Resistance.Lightning"));
+	GameplayTags.SetByCaller_Resistance_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Resistance.Physical"));
+	GameplayTags.SetByCaller_Resistance_Caustic = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Resistance.Caustic"));
+	// End Resistance Native Tag Register
+	
+	// Begin Recovery Native Tag Register
+	GameplayTags.SetByCaller_Recovery_HealthRegen = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Recovery.HealthRegen"));
+	GameplayTags.SetByCaller_Recovery_ManaRegen = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Recovery.ManaRegen"));
+	GameplayTags.SetByCaller_Recovery_Leech = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Recovery.Leech"));
+	GameplayTags.SetByCaller_Recovery_LifeOnHit = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Recovery.LifeOnHit"));
+	// End Recovery Native Tag Register
+
+	// Begin Offensive Native Tag Register
+	GameplayTags.SetByCaller_Offensive_CriticalHitChance = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Offensive.CriticalHitChance"));
+	GameplayTags.SetByCaller_Offensive_CriticalHitDamage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Offensive.CriticalHitDamage"));
+	GameplayTags.SetByCaller_Offensive_ActionSpeed = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Offensive.ActionSpeed"));
+	GameplayTags.SetByCaller_Offensive_AttackPower = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Offensive.AttackPower"));
+	GameplayTags.SetByCaller_Offensive_SpellPower = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Offensive.SpellPower"));
+	GameplayTags.SetByCaller_Offensive_Area = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Offensive.Area"));
+	GameplayTags.SetByCaller_Offensive_Multicast = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Offensive.Multicast"));
+	GameplayTags.SetByCaller_Offensive_Range = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Offensive.Range"));
+	GameplayTags.SetByCaller_Offensive_ExtraProj = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Offensive.ExtraProj"));
+	GameplayTags.SetByCaller_Offensive_ArmorPen = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Offensive.ArmorPen"));
+	// End Offensive Native Tag Register
+
+	// Begin Utility Native Tag Register
+	GameplayTags.SetByCaller_Utility_MovementSpeed = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Utility.MovementSpeed"));
+	GameplayTags.SetByCaller_Utility_CooldownReduction = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Utility.CooldownReduction"));
+	GameplayTags.SetByCaller_Utility_PickupRadius = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Utility.PickupRadius"));
+	GameplayTags.SetByCaller_Utility_GoldFind = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Utility.GoldFind"));
+	GameplayTags.SetByCaller_Utility_DashCount = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Utility.DashCount"));
+	// End Utility Native Tag Register
+
+	/*
+	 *		DAMAGE REGISTER
+	 */ 
+	
 	// Begin Damage / Damage Type Tags
 	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("Damage"));
 	GameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fire"), FString("Fire Damage Type"));
@@ -102,5 +166,24 @@ void FDuskyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("InputTag.4"), FString("Input Tag for Key 4"));
 	// End Input Native Tag Register
 
+	/*
+	 *		EQUIPMENT TAG REGISTER
+	*/
+
+	// Begin Equipped Gear Tag Register
+	GameplayTags.Equipment_Slot_Head = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Head"), FString("Tag for head slot of equipped gear"));
+	GameplayTags.Equipment_Slot_Shoulder = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Shoulder"), FString("Tag for shoulder slot of equipped gear"));
+	GameplayTags.Equipment_Slot_Amulet = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Amulet"), FString("Tag for amulet slot of equipped gear"));
+	GameplayTags.Equipment_Slot_Cloak = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Cloak"), FString("Tag for cloak slot of equipped gear"));
+	GameplayTags.Equipment_Slot_Chest = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Chest"), FString("Tag for chest slot of equipped gear"));
+	GameplayTags.Equipment_Slot_Bracers = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Bracers"), FString("Tag for bracers slot of equipped gear"));
+	GameplayTags.Equipment_Slot_Gloves = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Gloves"), FString("Tag for gloves slot of equipped gear"));
+	GameplayTags.Equipment_Slot_Belt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Belt"), FString("Tag for belt slot of equipped gear"));
+	GameplayTags.Equipment_Slot_Pants = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Pants"), FString("Tag for pants slot of equipped gear"));
+	GameplayTags.Equipment_Slot_Boots = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Boots"), FString("Tag for boots slot of equipped gear"));
+	GameplayTags.Equipment_Slot_Ring = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.Ring"), FString("Tag for ring slot of equipped gear"));
+	GameplayTags.Equipment_Slot_MainHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.MainHand"), FString("Tag for main hand slot of equipped gear"));
+	GameplayTags.Equipment_Slot_OffHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Equipment.Slot.OffHand"), FString("Tag for off hand slot of equipped gear"));
+	// End Equipped Gear Tag Register
 
 }
