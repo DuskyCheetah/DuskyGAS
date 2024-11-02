@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "DuskyItemBase.generated.h"
 
+// Rarity types for items
 enum EItemRarity
 {
 	Normal,
@@ -13,6 +14,15 @@ enum EItemRarity
 	Rare,
 	Legendary,
 	Unique
+};
+
+// Inventory type of the item to be used for where to store said item
+enum EInventoryType
+{
+	Currency,
+	Material,
+	Gem,
+	SlotItem
 };
 
 UCLASS()

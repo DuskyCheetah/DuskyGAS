@@ -23,6 +23,9 @@ public:
 	virtual int32 GetPlayerLevel() override;
 	// Combat Interface
 
+	// Player's Current Gold Count
+	int32 GoldCount = 0;
+
 protected:
 	virtual void InitializeDefaultAttributes() const override;
 

@@ -33,6 +33,9 @@ struct FEnemyClassDefaultInfo
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 	
 };
 

@@ -5,6 +5,7 @@
 
 #include "DuskyAbilityTypes.h"
 #include "Game/DuslyGameModeBase.h"
+#include "Interaction/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/WidgetController/DuskyWidgetController.h"
 #include "Player/DuskyPlayerState.h"
@@ -147,7 +148,7 @@ void UDuskyAbilitySystemLibrary::InitializePlayerDefaultAttributes(const UObject
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributeSpecHandle.Data.Get());	// Must dereference the handle & .Data.Get() to retrieve the Spec from Handle
 }
 
-void UDuskyAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+void UDuskyAbilitySystemLibrary::GiveEnemyStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, EEnemyClass EnemyClass)
 {
 	// Obtain GameMode - return if null because no crashie.
 	ADuslyGameModeBase* DuskyGameMode = Cast<ADuslyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
@@ -155,11 +156,30 @@ void UDuskyAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContex
 
 	// Obtain EnemyClassInfo
 	UEnemyClassInfo* ClassInfo = DuskyGameMode->EnemyClassInfo;
+	// Crash prevention check
+	if (ClassInfo == nullptr) return;
 
+	// Non-Scaling abilities such as Death, Hit React & so on
 	for (TSubclassOf<UGameplayAbility> AbilityClass : ClassInfo->CommonAbilities)
 	{
-		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
-		ASC->GiveAbility(AbilitySpec);
+		FGameplayAbilitySpec CommonAbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		ASC->GiveAbility(CommonAbilitySpec);
+	}
+
+	// Start-up abilities - these will scale with level
+	const FEnemyClassDefaultInfo& DefaultInfo = ClassInfo->GetEnemyClassDefaultInfo(EnemyClass);
+	for (TSubclassOf<UGameplayAbility>AbilityClass : DefaultInfo.StartupAbilities)
+	{
+		// Obtain AvatarActor - Cast to CombatInterface
+		ICombatInterface* CombatInterface = Cast<ICombatInterface>(ASC->GetAvatarActor());
+		// If cast is successful
+		if (CombatInterface)
+		{
+			// Create Ability Spec and instantiate with current (enemy) player level
+			FGameplayAbilitySpec StartupAbilitySpec = FGameplayAbilitySpec(AbilityClass, CombatInterface->GetPlayerLevel());
+			// Give Startup Abilities
+			ASC->GiveAbility(StartupAbilitySpec);
+		}
 	}
 }
 

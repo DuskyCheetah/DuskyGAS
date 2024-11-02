@@ -37,7 +37,7 @@ class AURA_API ADuskyGear : public ADuskyItemBase
 	ADuskyGear(const EItemRarity Rarity, const int ItemLevel, const EItemType ItemType);
 
 private:
-
+	
 	EItemType ItemType;
 
 	UPROPERTY()

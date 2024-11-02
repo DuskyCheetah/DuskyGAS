@@ -168,8 +168,12 @@ void ADuskyPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 					Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
 					DrawDebugSphere(GetWorld(), PointLoc, 12.f, 8, FColor::Green, false, 5.f);
 				}
-				CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
-				bAutoRunning = true;
+				if (NavPath->PathPoints.Num() > 0)
+				{
+					CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
+					bAutoRunning = true;
+				}
+
 			}
 		}
 		// Resetting FollowTime && bTargeting for this input release cycle.

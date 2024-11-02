@@ -87,7 +87,7 @@ void ADuskyEnemy::BeginPlay()
 	InitAbilityActorInfo();
 	if (HasAuthority())
 	{
-		UDuskyAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);	// Grant enemy CommonAbilities
+		UDuskyAbilitySystemLibrary::GiveEnemyStartupAbilities(this, AbilitySystemComponent, EnemyClass);	// Grant enemy CommonAbilities
 	}
 
 	
