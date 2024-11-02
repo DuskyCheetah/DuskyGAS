@@ -32,6 +32,8 @@ public:
 	// Combat Interface
 	virtual int32 GetPlayerLevel() override;
 	virtual void Die() override;
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
 	// Combat Interface
 
 	// Attribute Delegates for HealthBar Updates
@@ -52,6 +54,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	bool bIsRangedMob = false;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -62,7 +67,7 @@ protected:
 	int32 Level = 1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
-	EEnemyClass EnemyClass = EEnemyClass::Enemy;
+	EEnemyClass EnemyClass = EEnemyClass::Melee;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;

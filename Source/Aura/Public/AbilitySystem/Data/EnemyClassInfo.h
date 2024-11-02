@@ -14,9 +14,9 @@ UENUM(BlueprintType)
 enum class EEnemyClass : uint8
 {
 	// Enemy Classes
-	Enemy,
-	Elite,
-	Boss
+	Melee,
+	Ranged,
+	Caster
 };
 
 // Struct declaring specific class info

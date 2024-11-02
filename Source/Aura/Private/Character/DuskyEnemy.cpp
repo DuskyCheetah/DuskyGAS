@@ -80,6 +80,16 @@ void ADuskyEnemy::Die()
 	Super::Die();
 }
 
+void ADuskyEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
+}
+
+AActor* ADuskyEnemy::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
+}
+
 void ADuskyEnemy::BeginPlay()
 {
 	Super::BeginPlay();

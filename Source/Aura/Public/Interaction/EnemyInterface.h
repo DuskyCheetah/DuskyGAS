@@ -26,4 +26,10 @@ public:
 	// When used - that class MUST override these functions.
 	virtual void HighlightActor() = 0;
 	virtual void UnHightlightActor() = 0;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void SetCombatTarget(AActor* InCombatTarget);
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	AActor* GetCombatTarget() const;
 };
