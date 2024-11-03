@@ -63,8 +63,9 @@ void ADuskyCharacterBase::BeginPlay()
 	
 }
 
-FVector ADuskyCharacterBase::GetCombatSocketLocation()
+FVector ADuskyCharacterBase::GetCombatSocketLocation_Implementation()
 {
+	check(Weapon);
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
 }
 
