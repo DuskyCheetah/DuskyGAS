@@ -150,11 +150,11 @@ void FDuskyGameplayTags::InitializeNativeGameplayTags()
 	// End Damage / Damage Type Tags
 
 	// Begin Abilities Native Tag Register
-	GameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Attack"));
+	GameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Attack"), FString("Attack Ability Tag"));
 	// End Abilities Native Tag Register
 	
 	// Begin Effect Native Tag Register
-	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"), FString("Attack Ability Tag"));
+	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"), FString("Tag granted when Hit Reacting"));
 	// End Effect Native Tag Register
 	
 	/*

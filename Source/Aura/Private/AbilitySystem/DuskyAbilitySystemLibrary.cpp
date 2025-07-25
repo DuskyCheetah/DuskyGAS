@@ -115,7 +115,7 @@ void UDuskyAbilitySystemLibrary::InitializePlayerDefaultAttributes(const UObject
 	// Obtain CharacterClassInfo
 	UCharacterClassInfo* ClassInfo = DuskyGameMode->CharacterClassInfo;
 	// Obtain ClassInfo for CharacterType
-	FCharacterClassDefaultInfo ClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
+	FCharacterClassDefaultInfo ClassDefaultInfo = ClassInfo->GetCharacterClassDefaultInfo(CharacterClass);
 
 	/*		Init Core Attributes		*/
 	
@@ -146,6 +146,42 @@ void UDuskyAbilitySystemLibrary::InitializePlayerDefaultAttributes(const UObject
 	// Create GESpecHandle to pass into ApplyGESpecToSelf
 	const FGameplayEffectSpecHandle VitalAttributeSpecHandle = ASC->MakeOutgoingSpec(ClassDefaultInfo.VitalAttributes, Level, VitalAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributeSpecHandle.Data.Get());	// Must dereference the handle & .Data.Get() to retrieve the Spec from Handle
+}
+
+void UDuskyAbilitySystemLibrary::GivePlayerStartupAbilities(const UObject* WorldContextObject,
+	UAbilitySystemComponent* ASC, ECharacterClass CharacterClass)
+{
+	// Obtain GameMode - return if null because no crashie.
+	ADuslyGameModeBase* DuskyGameMode = Cast<ADuslyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (DuskyGameMode == nullptr) return;
+
+	// Obtain CharacterClassInfo (Player)
+	UCharacterClassInfo* ClassInfo = DuskyGameMode->CharacterClassInfo;
+	// Crash prevention check
+	if (ClassInfo == nullptr) return;
+
+	// Non-Scaling abilities such as Death, Hit React & so on
+	for (TSubclassOf<UGameplayAbility> AbilityClass : ClassInfo->CommonAbilities)
+	{
+		FGameplayAbilitySpec CommonAbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		ASC->GiveAbility(CommonAbilitySpec);
+	}
+
+	// Start-up abilities - these will scale with level
+	const FCharacterClassDefaultInfo& DefaultInfo = ClassInfo->GetCharacterClassDefaultInfo(CharacterClass);
+	for (TSubclassOf<UGameplayAbility>AbilityClass : DefaultInfo.StartupAbilities)
+	{
+		// Obtain AvatarActor - Cast to CombatInterface
+		ICombatInterface* CombatInterface = Cast<ICombatInterface>(ASC->GetAvatarActor());
+		// If cast is successful
+		if (CombatInterface)
+		{
+			// Create Ability Spec and instantiate with current player level
+			FGameplayAbilitySpec StartupAbilitySpec = FGameplayAbilitySpec(AbilityClass, CombatInterface->GetPlayerLevel());
+			// Give Startup Abilities
+			ASC->GiveAbility(StartupAbilitySpec);
+		}
+	}
 }
 
 void UDuskyAbilitySystemLibrary::GiveEnemyStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, EEnemyClass EnemyClass)
@@ -233,5 +269,29 @@ void UDuskyAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& 
 	if (FDuskyGameplayEffectContext* DuskyEffectContext = static_cast<FDuskyGameplayEffectContext*>(EffectContextHandle.Get()))
 	{
 		DuskyEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+	}
+}
+
+void UDuskyAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject,
+	TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius,
+	const FVector& SphereOrigin)
+{
+	FCollisionQueryParams SphereParams;
+	SphereParams.AddIgnoredActors(ActorsToIgnore);
+
+	TArray<FOverlapResult> Overlaps;
+	if (const UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	{
+		World->OverlapMultiByObjectType(Overlaps, SphereOrigin, FQuat::Identity, FCollisionObjectQueryParams(FCollisionObjectQueryParams::InitType::AllDynamicObjects), FCollisionShape::MakeSphere(Radius), SphereParams);
+		// Loop through each overlap result
+		for (FOverlapResult& Overlap : Overlaps)
+		{
+			// Check actor implements CombatInterface, if and only if they do, then check if actor is alive
+			if (Overlap.GetActor()->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsDead(Overlap.GetActor()))
+			{
+				// Add actor to array - ensuring no duplicates
+				OutOverlappingActors.AddUnique(Overlap.GetActor());
+			}
+		}
 	}
 }

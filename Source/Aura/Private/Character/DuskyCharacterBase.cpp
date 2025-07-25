@@ -55,6 +55,8 @@ void ADuskyCharacterBase::MulticastHandleDeath_Implementation()
 	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	bDead = true;
 }
 
 void ADuskyCharacterBase::BeginPlay()
@@ -67,6 +69,16 @@ FVector ADuskyCharacterBase::GetCombatSocketLocation_Implementation()
 {
 	check(Weapon);
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
+bool ADuskyCharacterBase::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* ADuskyCharacterBase::GetAvatar_Implementation() 
+{
+	return this;
 }
 
 void ADuskyCharacterBase::InitAbilityActorInfo()

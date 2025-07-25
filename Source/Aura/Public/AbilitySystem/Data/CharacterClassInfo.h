@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "CharacterClassInfo.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 
 // Enum declaring RPG Classes w/i game
@@ -33,6 +34,10 @@ struct FCharacterClassDefaultInfo
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Class Defaults")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
 };
 
 /**
@@ -49,5 +54,9 @@ public:
 	TMap<ECharacterClass, FCharacterClassDefaultInfo> CharacterClassInformation;
 	
 	// Getter for ClassDefaultInfo when passed a specific Class
-	FCharacterClassDefaultInfo GetClassDefaultInfo(ECharacterClass CharacterClass);
+	FCharacterClassDefaultInfo GetCharacterClassDefaultInfo(ECharacterClass CharacterClass);
+
+	// Common GameplayAbilities all players have.
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
+	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 };

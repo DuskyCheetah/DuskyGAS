@@ -33,6 +33,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "DuskyAbilitySystemLibrary|CharacterClassDefaults")
 	static void InitializePlayerDefaultAttributes(const UObject* WorldContextObject, ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC);
+
+	UFUNCTION(BlueprintCallable, Category = "DuskyAbilitySystemLibrary|CharacterClassDefaults")
+	static void GivePlayerStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterClass CharacterClass);
 	
 	UFUNCTION(BlueprintCallable, Category = "DuskyAbilitySystemLibrary|CharacterClassDefaults")
 	static void GiveEnemyStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC, EEnemyClass EnemyClass);
@@ -56,6 +59,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "DuskyAbilitySystemLibrary|GameplayEffects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
+
+	UFUNCTION(BlueprintCallable, Category = "DuskyAbilitySystemLibrary|GameplayMechanics")
+	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin);
 };
 
 
