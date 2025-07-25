@@ -13,7 +13,11 @@ UCLASS()
 class AURA_API UDuskyDamageGameplayAbility : public UDuskyGameplayAbility
 {
 	GENERATED_BODY()
+public:
 
+	UFUNCTION(BlueprintCallable)
+	void CauseDamage(AActor* TargetActor);
+	
 protected:
 
 	// Damage Gameplay Effect Class

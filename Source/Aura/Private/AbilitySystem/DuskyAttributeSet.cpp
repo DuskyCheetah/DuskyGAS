@@ -254,8 +254,18 @@ void UDuskyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float 
 	// If damage source is NOT equal to target, as we don't want to show "self-damage"
 	if (Props.SourceCharacter != Props.TargetCharacter)
 	{
-		// Obtain DuskyPlayerController & check validity of pointer
+		// Obtain DuskyPlayerController & check validity of pointer for Source Character (Show Player Damage Dealt)
 		if (ADuskyPlayerController* PC = Cast<ADuskyPlayerController>(Props.SourceCharacter->Controller))
+		{
+			// Set FloatingNumber = Meta damage attribute & passing in the target
+			PC->ShowFloatingNumber(Value, Props.TargetCharacter, bBlockedHit, bDodgedHit, bCriticalHit);
+
+			// If this check passed - no need to run the following check
+			return;
+		}
+
+		// Obtain DuskyPlayerController & check validity of pointer for Target Character (Show Player Damage Received)
+		if (ADuskyPlayerController* PC = Cast<ADuskyPlayerController>(Props.TargetCharacter->Controller))
 		{
 			// Set FloatingNumber = Meta damage attribute & passing in the target
 			PC->ShowFloatingNumber(Value, Props.TargetCharacter, bBlockedHit, bDodgedHit, bCriticalHit);

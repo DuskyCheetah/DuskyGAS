@@ -128,6 +128,7 @@ void FDuskyGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.SetByCaller_Utility_GoldFind = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Utility.GoldFind"));
 	GameplayTags.SetByCaller_Utility_DashCount = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("SetByCaller.Utility.DashCount"));
 	// End Utility Native Tag Register
+	
 
 	/*
 	 *		DAMAGE REGISTER

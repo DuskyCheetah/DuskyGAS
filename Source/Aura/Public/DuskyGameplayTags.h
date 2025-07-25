@@ -137,6 +137,7 @@ public:
 	FGameplayTag SetByCaller_Utility_GoldFind;
 	FGameplayTag SetByCaller_Utility_DashCount;
 	// End SetByCaller Utility Tags
+	
 
 	/*
 	*		DAMAGE TAGS
@@ -152,6 +153,7 @@ public:
 	
 	// Map Damage Types to respective Game Type Resistance
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResists;
+	
 	// End Damage / Damage Types Tags
 
 	// Ability Tags
