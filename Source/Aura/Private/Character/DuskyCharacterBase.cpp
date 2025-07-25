@@ -81,6 +81,11 @@ AActor* ADuskyCharacterBase::GetAvatar_Implementation()
 	return this;
 }
 
+TArray<FTaggedMontage> ADuskyCharacterBase::GetAttackMontages_Implementation()
+{
+	return AttackMontages;
+}
+
 void ADuskyCharacterBase::InitAbilityActorInfo()
 {
 }
