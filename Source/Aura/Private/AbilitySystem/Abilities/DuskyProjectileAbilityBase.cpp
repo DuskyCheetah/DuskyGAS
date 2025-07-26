@@ -25,7 +25,9 @@ void UDuskyProjectileAbilityBase::SpawnProjectile(const FVector& ProjectileTarge
 	if (!bIsServer) return;
 
 	// We are on server...
-	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo());
+	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(
+		GetAvatarActorFromActorInfo(),
+		FDuskyGameplayTags::Get().Montage_Attack_Weapon);
 	// Vector from SocketLocation (SOURCE) to ProjectileTargetLocation (TARGET)
 	FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 	Rotation.Pitch = 0.f;

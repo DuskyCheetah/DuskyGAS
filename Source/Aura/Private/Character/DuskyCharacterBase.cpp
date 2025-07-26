@@ -4,6 +4,7 @@
 #include "Character/DuskyCharacterBase.h"
 
 #include "AbilitySystemComponent.h"
+#include "DuskyGameplayTags.h"
 #include "AbilitySystem/DuskyAbilitySystemComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
@@ -65,10 +66,25 @@ void ADuskyCharacterBase::BeginPlay()
 	
 }
 
-FVector ADuskyCharacterBase::GetCombatSocketLocation_Implementation()
+FVector ADuskyCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
 {
-	check(Weapon);
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+	const FDuskyGameplayTags& GameplayTags = FDuskyGameplayTags::Get();
+	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_Weapon) && IsValid(Weapon))
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+
+	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_LeftHand))
+	{
+		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+	}
+	
+	if (MontageTag.MatchesTagExact(GameplayTags.Montage_Attack_RightHand))
+	{
+		return GetMesh()->GetSocketLocation(RightHandSocketName);
+	}
+	return FVector();
+
 }
 
 bool ADuskyCharacterBase::IsDead_Implementation() const
