@@ -77,6 +77,9 @@ int32 ADuskyEnemy::GetPlayerLevel()
 void ADuskyEnemy::Die()
 {
 	SetLifeSpan(LifeSpan);
+	// Set Blackboard key value
+	if (DuskyAIController) DuskyAIController->GetBlackboardComponent()->SetValueAsBool(FName("isDead"), true);
+	
 	Super::Die();
 }
 
