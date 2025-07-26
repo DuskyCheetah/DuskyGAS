@@ -19,6 +19,15 @@ enum class EEnemyClass : uint8
 	Caster
 };
 
+UENUM(BlueprintType)
+enum class EEnemyType : uint8
+{
+	// Enemy Type
+	Normal,
+	Rare,
+	Boss
+};
+
 // Struct declaring specific class info
 USTRUCT(BlueprintType)
 struct FEnemyClassDefaultInfo

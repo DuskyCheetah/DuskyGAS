@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Abilities/DuskyGameplayAbility.h"
+#include "Interaction/CombatInterface.h"
 #include "DuskyDamageGameplayAbility.generated.h"
 
 /**
@@ -27,4 +28,7 @@ protected:
 	// TMap mapping all Damage Types to respective values.
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	TMap<FGameplayTag, FScalableFloat> DamageTypes;
+
+	UFUNCTION(BlueprintPure)
+	FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages) const;
 };
